@@ -46,7 +46,7 @@ The design document (`DESIGN_DOCUMENT.md` or equivalent) defines the intended pr
 
 ## Phase 2 — Create the Roadmap
 
-The roadmap (`ROADMAP.md`) breaks the design document into milestones — ordered, scoped deliverables that together realize the design.
+The roadmap (`design/ROADMAP.md`) breaks the design document into milestones — ordered, scoped deliverables that together realize the design.
 
 **Milestone structure:**
 - One milestone per coherent system or feature group.
@@ -76,7 +76,7 @@ See [`git-workflow.md`](git-workflow.md) for the full branch strategy.
 
 ## Phase 4 — Keep the Findings Log
 
-The findings log (`PROTOTYPE_FINDINGS.md`) is updated continuously as you build and test — not just at the end of a milestone. It is a living document.
+The findings log (`design/PROTOTYPE_FINDINGS.md`) is updated continuously as you build and test — not just at the end of a milestone. It is a living document.
 
 **How to add a finding:**
 1. Observe something that confirms, challenges, or complicates an assumption from the design document.
@@ -119,7 +119,7 @@ At any resolution pass, evaluate whether the current prototype qualifies as a re
 - The product is playable or usable end-to-end without hitting dead ends.
 
 **Tracking:**
-- RC eligibility is tracked in the `PROTOTYPE_FINDINGS.md` under a dedicated **Release Candidate Status** section (see template).
+- RC eligibility is tracked in `design/PROTOTYPE_FINDINGS.md` under a dedicated **Release Candidate Status** section (see template).
 - After a resolution pass, update the RC Status section with the current assessment and the rationale.
 - When RC status is confirmed, cut an `rc/{name}` branch from the prototype branch and begin stabilization. See [`git-workflow.md`](git-workflow.md).
 
@@ -156,10 +156,10 @@ Then return to Phase 2: write the next milestone's ROADMAP entries based on the 
 
 Before starting the next prototype branch:
 
-1. **Clear the findings log.** Reset `PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new branch name, new design version, current date). Preserve the RC History so the project's evaluation trail is maintained. The previous iteration's findings have already been consumed by the design document update — they do not carry forward.
+1. **Clear the findings log.** Reset `design/PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new branch name, new design version, current date). Preserve the RC History so the project's evaluation trail is maintained. The previous iteration's findings have already been consumed by the design document update — they do not carry forward.
 2. **Create the next prototype branch.** If the iteration direction is "Continue Iterating," branch from the current prototype branch to inherit its codebase. If the direction is "Fresh Start," branch from `main`. See [`git-workflow.md`](git-workflow.md) for naming.
 3. **Cherry-pick the design commit.** Bring the updated design document and goals into the new prototype branch by cherry-picking the commit from the `design` branch.
-4. **Write the new roadmap.** Build `ROADMAP.md` from the updated design document and the previous iteration's Next Iteration Direction. For continuation iterations, the roadmap is informed by the rework backlog and priorities established in the findings summary.
+4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and the previous iteration's Next Iteration Direction. For continuation iterations, the roadmap is informed by the rework backlog and priorities established in the findings summary.
 5. **Commit and push.** The new branch should start with a clean commit containing the roadmap and cleared findings.
 
 ---

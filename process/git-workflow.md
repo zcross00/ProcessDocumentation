@@ -9,7 +9,7 @@ Standard branch naming, commit message format, and merge strategy for all projec
 | Branch | Purpose |
 |--------|---------|
 | `main` | Always stable. Represents the last reviewed, complete state. Never commit experimental or in-progress work here directly. |
-| `design` | Long-running branch for all design documents and goals. `GOALS.md`, `DESIGN_DOCUMENT.md`, and `ROADMAP.md` live and are updated here. Merged to `main` when a design version is finalized. |
+| `design` | Long-running branch for all design documents and goals. All design-adjacent documents — `GOALS.md`, `DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BALANCE_NOTES.md` — live under the `design/` folder and are updated here. Merged to `main` when a design version is finalized. |
 | `prototype/{name}` | Prototype phase branch. Branched from `main` for a fresh start, or from the previous prototype branch for a continuation iteration. Long-running; all milestone implementation work happens here. Merged to `main` when the prototype is complete and reviewed. Example: `prototype/alpha`. |
 | `rc/{name}` | Release candidate branch. Branched from the corresponding prototype branch after RC eligibility is confirmed in the findings log. Only stabilization, polish, and bug fixes go here — no new features. Example: `rc/alpha-1`. |
 | `feature/{short-description}` | Isolated feature work, branched off the active prototype branch. Use for self-contained units of functionality. Example: `feature/concept-decay`. |
