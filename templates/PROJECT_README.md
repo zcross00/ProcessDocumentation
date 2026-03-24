@@ -1,32 +1,50 @@
+---
+version: "{{1.0.0}}"
+status: "{{Active | Archived | On Hold}}"
+updated: "{{date}}"
+---
+
 # {{Project Name}}
 
-**Version:** {{version, e.g. 1.0.0}}  
-**Status:** {{Active | Archived | On Hold}}  
-**Last Updated:** {{date}}
+<!--
+  AI-navigability patterns used in this document:
+
+  1. YAML frontmatter — machine-readable metadata at the top of the file.
+     Update these fields on every version or status change.
+
+  2. Section anchors — HTML comment immediately above every ## or ### heading.
+     Pattern: <!-- section: name -->
+     Use to find and update specific sections without relying on heading text.
+-->
 
 > **One-sentence summary of what this project is and why it exists.**
 
 ---
 
+<!-- section: overview -->
 ## Overview
 
 {{2–4 sentences. What problem does this project solve? What is it, broadly? Who is it for?}}
 
 ---
 
+<!-- section: getting-started -->
 ## Getting Started
 
+<!-- section: prerequisites -->
 ### Prerequisites
 
 - {{Dependency or tool}} — {{version}} — {{install link or command}}
 - {{Dependency or tool}} — {{version}} — {{install link or command}}
 
+<!-- section: build -->
 ### Build
 
 ```bash
 {{build command}}
 ```
 
+<!-- section: run -->
 ### Run
 
 ```bash
@@ -35,6 +53,7 @@
 
 ---
 
+<!-- section: project-structure -->
 ## Project Structure
 
 ```
@@ -46,6 +65,7 @@
 
 ---
 
+<!-- section: key-docs -->
 ## Key Documents
 
 | Document | Purpose |
@@ -56,12 +76,14 @@
 
 ---
 
+<!-- section: design-reference -->
 ## Design Reference
 
 {{If this is a game or product with a design document, mention it here. One sentence describing what the design document covers and where to find it.}}
 
 ---
 
+<!-- section: contributing -->
 ## Contributing
 
 {{How to work on this project: branch strategy reference, any project-specific conventions, who to contact.}}

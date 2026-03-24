@@ -1,7 +1,24 @@
+---
+updated: "{{date}}"
+iteration: "{{iteration-name}}"
+---
+
 # {{Project Name}} — Backlog
 
-**Last updated:** {{date}}  
-**Active iteration:** {{iteration name, e.g. prototype-dawn}}
+<!--
+  AI-navigability patterns used in this document:
+
+  1. YAML frontmatter — machine-readable metadata at the top of the file.
+     Update these fields at the start of each iteration.
+
+  2. Section anchors — HTML comment immediately above every ## or ### heading.
+     Pattern: <!-- section: name -->
+     Use to find and update specific sections without relying on heading text.
+
+  3. Item anchors — HTML comment immediately above each BL-N detail block.
+     Pattern: <!-- item: BL-N -->
+     Add one before every **BL-N Detail:** paragraph.
+-->
 
 This is the living work backlog. It tracks every identified item that has not been resolved — features, rework, technical concerns, design gaps, and deferred decisions.
 
@@ -9,6 +26,7 @@ Git history is the log of resolved items. When an item is completed, remove it f
 
 ---
 
+<!-- section: how-to-read -->
 ## How to Read This
 
 Each item has:
@@ -21,47 +39,56 @@ Each item has:
 
 ---
 
+<!-- section: backlog -->
 ## Backlog
 
+<!-- section: p1 -->
 ### P1 — Must Address Next Iteration
 
 | ID | Type | Synopsis | Source |
 |----|------|----------|--------|
 | BL-1 | TechDebt | {{One-line description}} | {{TC-N / finding ID / observation}} |
 
+<!-- item: BL-1 -->
 **BL-1 Detail:**  
 {{Describe what needs to happen, what prompted this, and any constraints or context that would help someone pick it up.}}
 
 ---
 
+<!-- section: p2 -->
 ### P2 — Important, Schedule Soon
 
 | ID | Type | Synopsis | Source |
 |----|------|----------|--------|
 | BL-2 | Rework | {{One-line description}} | {{Source}} |
 
+<!-- item: BL-2 -->
 **BL-2 Detail:**  
 {{Detail}}
 
 ---
 
+<!-- section: p3 -->
 ### P3 — Valuable but Deferrable
 
 | ID | Type | Synopsis | Source |
 |----|------|----------|--------|
 | BL-3 | Feature | {{One-line description}} | {{Source}} |
 
+<!-- item: BL-3 -->
 **BL-3 Detail:**  
 {{Detail}}
 
 ---
 
+<!-- section: p4 -->
 ### P4 — Low Urgency / Speculative
 
 | ID | Type | Synopsis | Source |
 |----|------|----------|--------|
 | BL-4 | Design | {{One-line description}} | {{Source}} |
 
+<!-- item: BL-4 -->
 **BL-4 Detail:**  
 {{Detail}}
 

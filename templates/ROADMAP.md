@@ -1,13 +1,29 @@
+---
+iteration: "{{iteration-name}}"
+design-version: "{{GDD vX.Y}}"
+previous: "{{previous-iteration (N Confirm, M Rework, K Abandon)}}"
+direction: "{{Continue Iterating | Parallel Effort | Fresh Start}}"
+branch: "{{branch-name}}"
+---
+
 # {{Project Name}} — Roadmap
 
-**Target:** {{What this roadmap covers — e.g. "Feature-complete prototype covering all core systems"}}  
-**Branch:** `{{branch name}}`  
-**Design reference:** `{{path to design document}}`
+<!--
+  AI-navigability patterns used in this document:
+
+  1. YAML frontmatter — machine-readable metadata at the top of the file.
+     Update these fields at the start of each iteration.
+
+  2. Section anchors — HTML comment immediately above every ## or ### heading.
+     Pattern: <!-- section: name -->
+     Use to find and update specific sections without relying on heading text.
+-->
 
 Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
 
 ---
 
+<!-- section: m1 -->
 ## Milestone 1 — {{Name}} ✅ *Complete*
 
 {{1–2 sentences describing what this milestone delivers and why it comes first.}}
@@ -22,6 +38,7 @@ Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
 
 ---
 
+<!-- section: m2 -->
 ## Milestone 2 — {{Name}}
 
 {{1–2 sentences describing what this milestone delivers and why it follows Milestone 1.}}
@@ -48,6 +65,7 @@ Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
 
 ---
 
+<!-- section: status-summary -->
 ## Quick Reference: Status Summary
 
 | System | Status | Milestone |

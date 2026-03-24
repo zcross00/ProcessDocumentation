@@ -1,8 +1,26 @@
+---
+iteration: "{{iteration-name}}"
+branch: "{{branch-name}}"
+design-version: "{{GDD vX.Y}}"
+started: "{{date}}"
+---
+
 # {{Project Name}} — Prototype Findings Log
 
-**Prototype branch:** `{{branch name}}`  
-**Design version:** {{e.g. GDD v0.1 / Design Doc v0.1}}  
-**Log started:** {{date}}
+<!--
+  AI-navigability patterns used in this document:
+
+  1. YAML frontmatter — machine-readable metadata at the top of the file.
+     Update these fields at the start of each iteration.
+
+  2. Section anchors — HTML comment immediately above every ## or ### heading.
+     Pattern: <!-- section: name -->
+     Use to find and update specific sections without relying on heading text.
+
+  3. Prototype note IDs — HTML comment immediately above each versioned blockquote.
+     Pattern: <!-- note: vX.Y-sectionN-topic -->
+     Add one before every > **vX.Y — ...** observation block.
+-->
 
 This is a living document. It records observations made during prototype implementation and playtesting, organized into four categories:
 
@@ -17,6 +35,7 @@ This document also tracks **release candidate eligibility**. See the Release Can
 
 ---
 
+<!-- section: m1 -->
 ## Milestone 1 — {{Milestone Name}}
 
 ### [Confirm] {{Finding title}}
@@ -37,6 +56,7 @@ This document also tracks **release candidate eligibility**. See the Release Can
 
 ---
 
+<!-- section: m2 -->
 ## Milestone 2 — {{Milestone Name}}
 
 ### [Confirm] {{Finding title}}
@@ -45,6 +65,7 @@ This document also tracks **release candidate eligibility**. See the Release Can
 
 ---
 
+<!-- section: cross-cutting -->
 ## Cross-Cutting Observations
 
 ### [Discuss] {{Finding title}}
@@ -67,6 +88,7 @@ This document also tracks **release candidate eligibility**. See the Release Can
 
 ---
 
+<!-- section: tc -->
 ## Technical Concerns
 
 Technical concerns are architectural, structural, or implementation-level observations that fall outside the design-validation scope of the standard finding categories. They are not about whether a mechanic is desirable — they are about whether the codebase, architecture, or technical approach is sustainable, secure, or extensible.
@@ -78,6 +100,7 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 ---
 
+<!-- item: TC-1 -->
 ### [TC-1] [Pressing / Future] {{Concern title}}
 
 **Observation:** {{What was observed in the codebase or implementation that raises this concern.}}
@@ -100,6 +123,7 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 ---
 
+<!-- section: findings-summary -->
 ## Findings Summary
 
 {{Written after all milestones are complete and before the resolution pass. This section distills the full findings log into a narrative assessment of what was learned, organized by theme rather than by milestone. It serves two audiences:}}
@@ -108,22 +132,27 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 {{2. **Design document updates** — What specific changes, additions, or removals should feed back into the next version of the design document?}}
 
+<!-- section: findings-what-worked -->
 ### What Worked
 
 {{Summarize the confirmed assumptions that held up across implementation. Group by system or theme (e.g. "Core loop," "Social systems," "Economy"). Call out which design pillars or goals these findings validate. Be specific about which mechanics proved sound and why.}}
 
+<!-- section: findings-rework-summary -->
 ### What Needs Rework
 
 {{Summarize findings tagged [Rework]. Group by severity: issues that affect core gameplay vs. polish-level concerns. For each group, note whether the rework is scoped (clear fix, bounded effort) or open-ended (requires design exploration). Call out any rework items that, if left unaddressed, would block release candidacy.}}
 
+<!-- section: findings-abandoned -->
 ### What Was Abandoned
 
 {{Summarize findings tagged [Abandon], if any. Explain the reasoning and call out downstream effects on other confirmed or planned features.}}
 
+<!-- section: findings-questions -->
 ### Open Questions
 
 {{Summarize findings tagged [Discuss] that remain unresolved. For each, state what decision is needed and what is blocked until it's made. If a [Discuss] finding was resolved during the prototype, note the resolution and which category it moved to.}}
 
+<!-- section: findings-doc-recs -->
 ### Design Document Recommendations
 
 {{List specific, actionable changes for the next design document version. Reference finding numbers (e.g. M1-8, CX-2) and the section of the design document each change would affect. Distinguish between: additions (new sections or mechanics to document), revisions (existing sections that need updating), and removals (design assumptions that should be struck).}}
@@ -139,6 +168,7 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 ---
 
+<!-- section: resolution-tracker -->
 ## Resolution Tracker
 
 | # | Finding | Status | Design Target |
@@ -151,12 +181,14 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 ---
 
+<!-- section: rc-status -->
 ## Release Candidate Status
 
 **Current assessment:** {{Not Yet Eligible / Under Evaluation / Eligible / Confirmed}}
 
 {{Brief rationale for the current assessment. What would need to change to move to the next status?}}
 
+<!-- section: rc-criteria -->
 ### RC Eligibility Criteria
 
 | Criterion | Met? | Notes |
@@ -166,12 +198,14 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 | All Discuss findings are resolved or explicitly scoped out | {{Yes / No / Partial}} | {{Which discussions are still open}} |
 | Product is playable / usable end-to-end without dead ends | {{Yes / No / Partial}} | {{Known blocking gaps}} |
 
+<!-- section: rc-history -->
 ### RC History
 
 | Date | Assessment | Rationale |
 |------|-----------|----------|
 | {{date}} | {{Not Yet Eligible}} | {{e.g. "Too many Rework findings across core systems; social layer unvalidated"}} |
 
+<!-- section: rc-next-direction -->
 ### Next Iteration Direction
 
 **Decision:** {{Continue Iterating / Parallel Effort / Fresh Start}}
