@@ -74,6 +74,11 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Goals re-evaluated after every prototype resolution pass | Check alignment before updating the design document (`process/design-iteration.md`) |
 | Active prototype branch is `prototype/active` | All development goes here; never commit work-item work directly to this branch (`process/git-workflow.md`) |
 | Work-item branches named `prototype/work-item/{BL-N}` | Short-lived; branch from `prototype/active`, push immediately to claim the item, merged via PR, deleted after merge (`process/git-workflow.md`) |
+| Delete work-item branch after PR merge | After merge, delete both the remote and local work-item branch immediately; do not leave stale branches on the remote (`process/git-workflow.md`) |
+| Merge available work-item commits before submitting PR | Before opening a PR, fetch and merge commits from other open work-item branches that touch the same files; resolve conflicts before pushing (`process/git-workflow.md`) |
+| BUILDERs actively watch for merge conflicts | Pull `prototype/active` during implementation and rebase/merge to catch conflicts early, not at PR time (`process/git-workflow.md`) |
+| SCRIBE always works from `prototype/active` | All SCRIBE direct commits and SCRIBE PR branches originate from `prototype/active`; never from a work-item or other branch (`process/roles.md`) |
+| Always continue after task completion | After completing any task — PR open, PR merged, review done — immediately proceed to the next step in the loop without pausing for direction; stop only when the 2-PR hold condition applies (`process/git-workflow.md`) |
 | Remote branch existence = item claimed | Before picking up a backlog item, run `git fetch --prune` and check for an existing remote branch — skip if found (`process/git-workflow.md`) |
 | Open a PR after each work item; merge only after approval | Follow `standards/pr.md`; delegate complex review issues to a sub-agent; do not merge with blocking comments unresolved (`process/git-workflow.md`) |
 | Every roadmap item must have a `BL-N` backlog entry | Roadmap describes shape; backlog contains operational detail; no implementation without a backlog entry (`templates/BACKLOG.md`, `templates/ROADMAP.md`) |

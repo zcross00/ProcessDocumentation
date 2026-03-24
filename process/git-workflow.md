@@ -97,6 +97,8 @@ Build everything described in the item's Detail section. This includes:
 - Removing the resolved item from `BACKLOG.md` as part of the final commit.
 - Any `CODE-DRIFT` or `DESIGN-DRIFT` entries identified during the work — add them to `BACKLOG.md` on the work-item branch, not via direct commit to `prototype/active`.
 
+While implementing, **actively watch for merge conflicts**. Periodically pull `prototype/active` and rebase or merge it into your work-item branch to catch conflicts early. Do not wait until the PR stage to discover that another branch has modified the same files.
+
 All of this lands on `prototype/active` through the PR. The BUILDER makes no direct commits to `prototype/active`.
 
 Do not implement anything beyond the item's stated scope. If adjacent issues are found, add them as new BL-N items in `BACKLOG.md` with the next available ID.
@@ -104,16 +106,17 @@ Do not implement anything beyond the item's stated scope. If adjacent issues are
 **5. Submit a PR.**  
 When the item is fully implemented and all tests pass:
 
-1. Push the final commits to the work-item branch.
-2. Remove the item from `BACKLOG.md` as part of this final commit.
-3. Open a PR targeting `prototype/active`.
-4. The PR description must include:
+1. Fetch `origin` and merge any commits from other open work-item branches that target the same files or systems as your work. Resolve any conflicts before pushing. This reduces the merge burden for subsequent branches and keeps the integration surface clean.
+2. Push the final commits to the work-item branch.
+3. Remove the item from `BACKLOG.md` as part of this final commit.
+4. Open a PR targeting `prototype/active`.
+5. The PR description must include:
    - The backlog item ID and its synopsis.
    - The done-when condition from the item detail (or derived from it).
    - Test results summary.
    - Any findings or balance notes updated as part of this work.
    - The commit message `Closes BL-N` reference.
-5. Follow [`standards/pr.md`](../standards/pr.md) when reviewing the PR before submitting. Apply the same checklist when reviewing others' PRs.
+6. Follow [`standards/pr.md`](../standards/pr.md) when reviewing the PR before submitting. Apply the same checklist when reviewing others' PRs.
 
 **6. After submitting the PR, review any open PRs while waiting.**  
 If there are other open PRs targeting `prototype/active`, review them now using the checklist in [`standards/pr.md`](../standards/pr.md). Leave comments, flag issues, or approve.
@@ -130,8 +133,11 @@ When a reviewer comments on an open PR:
 - Delegate complex investigation to a sub-agent, passing the PR context, specific comment, and affected code. Confirm output before pushing.
 - Once feedback is resolved, push and re-request review. Do not re-open merged work.
 
-**9. After merge, check for more PRs to review, then continue the loop.**  
-Every merge is a signal to return to step 1: review open PRs, then pick up the next item.
+**9. After merge, delete the work-item branch and continue.**  
+After a PR is merged:
+- Delete the remote work-item branch: `git push origin --delete prototype/work-item/{BL-N}`.
+- Delete the local branch: `git branch -d prototype/work-item/{BL-N}`.
+- Return to step 1: review open PRs, then pick up the next item. Do not pause or wait for direction — continue the loop unless the 2-PR hold condition applies.
 
 ---
 

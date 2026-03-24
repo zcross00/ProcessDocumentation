@@ -119,6 +119,8 @@ The two exceptions where a SCRIBE may commit directly to `prototype/active` with
 
 ### Starting a Session
 
+A SCRIBE always works directly on `prototype/active`. All direct commits (STATUS.md updates, bootstrapping) and all SCRIBE PRs branch from the current head of `prototype/active`. The SCRIBE never works from a work-item branch or any other branch.
+
 A SCRIBE begins by understanding the current state of the project, the same way a BUILDER does:
 
 1. Pull the latest `prototype/active` from remote.
