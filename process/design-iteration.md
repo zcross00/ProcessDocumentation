@@ -7,14 +7,14 @@ This document describes the standard workflow for moving from an initial concept
 ## The Cycle
 
 ```
-[GOALS] → [DESIGN DOCUMENT] → [ROADMAP] → [PROTOTYPE BRANCH] → [FINDINGS LOG] → [RC EVALUATION?]
-   ↑                                                                  |                  |
-   │                                                  [GOALS RE-EVAL] ←                  ↓
-   │                                                        |                    [RELEASE CANDIDATE]
-   └──────── [UPDATED DESIGN DOCUMENT] ← ── [CLEAR FINDINGS & NEW BRANCH] ←────┘
+[GOALS] → [DESIGN DOCUMENT] → [ROADMAP] → [prototype/active] → [FINDINGS LOG] → [RC EVALUATION?]
+   ↑                                              ↑                     |                  |
+   │                                    [ITERATE] ────── [GOALS RE-EVAL] ←                  ↓
+   │                                                        |              [ELIGIBLE? → SHIP TO main]
+   └──────── [UPDATED DESIGN DOCUMENT] ← ── [TAG ITERATION, CLEAR FINDINGS, UPDATE BACKLOG]
 ```
 
-Each pass through the cycle produces one design version and one prototype phase. The findings from the prototype feed back into the goals and the next design version. When confirmed findings significantly outnumber rework and design concerns, the prototype may be evaluated as a release candidate.
+Each pass through the cycle produces one design version and one iteration. The findings feed back into goals and the next design version. The same `prototype/active` branch carries all iterations forward. Merging to `main` is a separate release decision — RC eligibility means the product *could* ship, not that it automatically does.
 
 ---
 
@@ -27,7 +27,7 @@ Goals are the root-level purpose of the project. They are value statements — w
 **Rules:**
 - Goals describe experiences and values, not solutions. "Players should feel that information is as powerful as physical resources" is a goal. "Implement a journal system" is a design decision.
 - Goals are falsifiable: you should be able to look at a working prototype and evaluate whether a goal was achieved.
-- Goals live on the `design` branch alongside the design document.
+- Goals live in the `design/` folder on `prototype/active` alongside the design document and roadmap. There is no separate design branch.
 - Version goals (e.g., `v1.0`) from the start. A version bump signals a meaningful shift in what the project is trying to accomplish.
 - Goals should survive at least one full design iteration unchanged. If a goal is changing every cycle, it is probably a design assumption in disguise.
 
@@ -41,6 +41,7 @@ The design document (`DESIGN_DOCUMENT.md` or equivalent) defines the intended pr
 - Write what you intend, not what you've implemented. The design document describes the target; the ROADMAP describes the path to it.
 - Mark speculative or unvalidated assumptions explicitly. These become the first candidates for prototype investigation.
 - Assign a version number (e.g., `v0.1`). Versions increment after each resolution pass.
+- When a design version is finalized and committed to `prototype/active`, tag that commit: `git tag design/v{N.M}`.
 
 ---
 
@@ -63,14 +64,16 @@ The roadmap (`design/ROADMAP.md`) breaks the design document into milestones —
 
 ## Phase 3 — Implement on a Prototype Branch
 
-All prototype work lives on a dedicated branch named `prototype/{name}` (e.g., `prototype/alpha`). The `design` branch holds the living design document and goals. The `main` branch always contains the last stable, reviewed state.
+All prototype work lives on `prototype/active` — the single long-lived prototype branch. Individual milestones are developed on short-lived `prototype/{milestone-name}` branches and delivered via **pull requests** targeting `prototype/active`. The `main` branch holds the last stable state shipped to users.
 
-See [`git-workflow.md`](git-workflow.md) for the full branch strategy.
+See [`git-workflow.md`](git-workflow.md) for the full branch and PR strategy, including the **Milestone PR Workflow** section.
 
 **Rules:**
 - Mark tasks `🔄 Partial` in the roadmap as you begin them.
 - Mark tasks `✅ Done` once the done-when condition is met and verified.
 - Don't mark milestones complete until every task in them is ✅.
+- When a milestone is complete, push the milestone branch and open a PR targeting `prototype/active`. Do not merge directly.
+- After opening a PR, check in periodically: respond to review comments, address flagged issues (delegating complex investigation or rework to a sub-agent where appropriate), and merge only after approval.
 
 ---
 
@@ -121,7 +124,7 @@ At any resolution pass, evaluate whether the current prototype qualifies as a re
 **Tracking:**
 - RC eligibility is tracked in `design/PROTOTYPE_FINDINGS.md` under a dedicated **Release Candidate Status** section (see template).
 - After a resolution pass, update the RC Status section with the current assessment and the rationale.
-- When RC status is confirmed, cut an `rc/{name}` branch from the prototype branch and begin stabilization. See [`git-workflow.md`](git-workflow.md).
+- When RC status is confirmed, the decision of *whether* and *when* to ship to users is separate and explicit. RC eligibility means the product *could* ship — it does not automatically trigger a merge to `main`. When the release decision is made, merge `prototype/active` to `main` and tag the merge commit with the release version (`v{major}.{minor}.{patch}`). See [`git-workflow.md`](git-workflow.md).
 
 ---
 
@@ -154,13 +157,13 @@ Then return to Phase 2: write the next milestone's ROADMAP entries based on the 
 
 ## Phase 8 — Prepare for the Next Iteration
 
-Before starting the next prototype branch:
+There is no new branch to create. All continued work stays on `prototype/active`.
 
-1. **Clear the findings log.** Reset `design/PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new branch name, new design version, current date). Preserve the RC History so the project's evaluation trail is maintained. The previous iteration's findings have already been consumed by the design document update — they do not carry forward.
-2. **Create the next prototype branch.** If the iteration direction is "Continue Iterating," branch from the current prototype branch to inherit its codebase. If the direction is "Fresh Start," branch from `main`. See [`git-workflow.md`](git-workflow.md) for naming.
-3. **Cherry-pick the design commit.** Bring the updated design document and goals into the new prototype branch by cherry-picking the commit from the `design` branch.
-4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and the previous iteration's Next Iteration Direction. For continuation iterations, the roadmap is informed by the rework backlog and priorities established in the findings summary.
-5. **Commit and push.** The new branch should start with a clean commit containing the roadmap and cleared findings.
+1. **Tag the iteration.** Tag the final commit of the completed iteration on `prototype/active`: `git tag -a iteration/{name} -m "{iteration summary}"`. Push the tag. This is the permanent record of where the iteration ended.
+2. **Clear the findings log.** Reset `design/PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new iteration name, new design version, current date). Preserve the RC History. The previous iteration's findings have been consumed by the design document update — they do not carry forward.
+3. **Update the backlog.** Open `design/BACKLOG.md`. Remove items that were resolved during the completed iteration (git history records them as done). Add new items surfaced by the findings — Rework findings, Technical Concerns marked [Pressing], and Next Iteration Direction priorities. Assign priorities. This is the primary planning input for the next roadmap.
+4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and `BACKLOG.md` priorities. Pull the top-priority items into the next milestone set.
+5. **Commit and push.** A single `docs:` commit containing the updated design document, cleared findings, updated backlog, and new roadmap. This commit on `prototype/active` is the clean start of the next iteration.
 
 ---
 
