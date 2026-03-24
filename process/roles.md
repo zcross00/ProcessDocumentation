@@ -10,7 +10,7 @@ Roles are assigned top-down. An agent proceeds to the next role only when the co
 
 1. **If the agent is explicitly told it is a SCRIBE** — it is a SCRIBE. Begin the SCRIBE session flow.
 2. **Otherwise, assume BUILDER.** Pull the repo, orient to the backlog, and begin the development loop.
-3. **If the BUILDER exhausts its capacity** (no unassigned, unblocked work items exist, or the agent reaches two active open PRs with no PRs to review) — it transitions to **KEEPER**.
+3. **If the BUILDER exhausts its capacity** (no unassigned, unblocked work items remain **and** the agent has two active open PRs with no PRs to review) — it transitions to **KEEPER**. The 2-PR pause condition alone does not trigger KEEPER — that is a temporary hold, not exhaustion.
 
 The three active roles are:
 
@@ -86,9 +86,9 @@ The BUILDER specifically: when implementing a work item, if the code does not ma
 
 The SCRIBE's job is to keep the project's design, documentation, and planning artifacts accurate and actionable. They do not implement features. They manage the continuity of the design across iterations and the health of the backlog between sessions.
 
-The SCRIBE session is **merge-triggered**. Every merge to `prototype/active` — whether a PR merge or a direct commit — is a signal for the SCRIBE to act. The SCRIBE's primary loop is:
+The SCRIBE session is **merge-triggered**. The SCRIBE is invoked by the user after every merge to `prototype/active` — whether a PR merge or a direct commit. When invoked, the SCRIBE's primary loop is:
 
-1. Detect a merge (PR completed or direct commit landed).
+1. Orient to what changed: which PR was merged or which direct commit landed.
 2. Update `design/STATUS.md` to reflect the new state.
 3. If the merge was a work-item PR: check `PROTOTYPE_FINDINGS.md` for new Ideas, review pending DRIFT items, and assess whether RC eligibility has changed.
 4. If the merge was a direct commit (e.g., a DRIFT item added by a BUILDER or KEEPER): review the new backlog entry and determine if it needs refinement or prioritization.
@@ -99,11 +99,13 @@ The SCRIBE session is **merge-triggered**. Every merge to `prototype/active` —
 A SCRIBE begins by understanding the current state of the project, the same way a BUILDER does:
 
 1. Pull the latest `prototype/active` from remote.
-2. Read `design/GOALS.md`.
-3. Read the current design document.
-4. Read `design/ROADMAP.md`.
-5. Review `design/BACKLOG.md`.
-6. Review `design/PROTOTYPE_FINDINGS.md` for the current iteration's findings and RC status.
+2. Read `design/STATUS.md` if it exists — this is the fastest orientation document. If it does not exist, create it now from [`templates/STATUS.md`](../templates/STATUS.md) before doing anything else.
+3. Read `design/GOALS.md`.
+4. Read the current design document.
+5. Read `design/ROADMAP.md`.
+6. Review `design/BACKLOG.md`.
+7. Review `design/PROTOTYPE_FINDINGS.md` for the current iteration's findings and RC status.
+8. Confirm `design/KNOWN_DRIFT.md` exists. If it does not, create it from [`templates/KNOWN_DRIFT.md`](../templates/KNOWN_DRIFT.md).
 
 Then proceed with the task described by the user. A SCRIBE never self-assigns iteration-level work — they always confirm direction with the user before starting a new iteration or making significant changes to design direction.
 
@@ -139,7 +141,7 @@ Then proceed with the task described by the user. A SCRIBE never self-assigns it
 - After every resolution pass, evaluate RC eligibility using the criteria in `design/PROTOTYPE_FINDINGS.md`.
 - Update the RC Status section in the findings log with the current assessment and rationale.
 - When RC status changes — in any direction — communicate the change and rationale to the user before acting.
-- When the user confirms RC eligibility: tag `prototype/active` with `rc/v{N.M}`. RC tags are **mutable** — if additional fixes land on `prototype/active` after the tag is applied, delete and recreate the tag at the new commit. Communicate any tag movement to the controller.
+- When the user confirms RC eligibility: tag `prototype/active` with `rc/v{N.M}`. RC tags are **mutable** — if additional fixes land on `prototype/active` after the tag is applied, delete and recreate the tag at the new commit. Communicate any tag movement to the user.
 - If continued prototype development is needed while an RC tag is maintained on `prototype/active`, that development happens on a parallel prototype branch (`prototype/{name}`) branched from the current head of `prototype/active`. That branch follows all the same rules as any other parallel prototype effort.
 - The decision to merge `prototype/active` to `main` and cut a release (`v{N.M}` tag) is made by the user. The SCRIBE executes the merge and applies the tag when explicitly instructed.
 

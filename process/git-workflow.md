@@ -67,7 +67,7 @@ All implementation work is driven by `BACKLOG.md`. Every item in the backlog has
 This describes the full loop an AI agent follows when working the backlog:
 
 **1. Review open PRs first.**  
-Before picking up any new work, check for open PRs targeting `prototype/active`. If any exist, review them — read the diff, check for problems, and respond with comments or approval. If a PR has unresolved blocking issues identified by the agent after review, leave a review comment and continue.
+Before picking up any new work, check for open PRs targeting `prototype/active`. If any exist, review them using the checklist in [`standards/pr.md`](../standards/pr.md) — read the diff, check for problems, and respond with comments or approval. If a PR has unresolved blocking issues identified by the agent after review, leave a review comment and continue.
 
 **2. Pick the highest unassigned item.**  
 Open `design/BACKLOG.md`. Starting at P1, find the first item that does not have an existing `prototype/work-item/{id}` remote branch. The existence of that branch means another agent instance is already working the item — skip it and move to the next.
@@ -108,7 +108,7 @@ When the item is fully implemented and all tests pass:
 5. Follow [`standards/pr.md`](../standards/pr.md) when reviewing the PR before submitting. Apply the same checklist when reviewing others' PRs.
 
 **6. After submitting the PR, review any open PRs while waiting.**  
-If there are other open PRs targeting `prototype/active`, review them now. Leave comments, flag issues, or approve.
+If there are other open PRs targeting `prototype/active`, review them now using the checklist in [`standards/pr.md`](../standards/pr.md). Leave comments, flag issues, or approve.
 
 **7. Continue to the next item if capacity allows.**  
 If there are no PRs to review, and the agent has fewer than **two active open PRs**, continue to the next highest unassigned item and repeat from step 3.

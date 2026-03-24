@@ -78,7 +78,8 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Open a PR after each work item; merge only after approval | Follow `standards/pr.md`; delegate complex review issues to a sub-agent; do not merge with blocking comments unresolved (`process/git-workflow.md`) |
 | Every roadmap item must have a `BL-N` backlog entry | Roadmap describes shape; backlog contains operational detail; no implementation without a backlog entry (`templates/BACKLOG.md`, `templates/ROADMAP.md`) |
 | Pause at 2 active PRs with no PRs to review | Do not open more than 2 concurrent work-item branches; see Agent Development Loop in `process/git-workflow.md` |
-| BUILDER transitions to KEEPER when backlog is exhausted | No unassigned items + 2 open PRs = transition to KEEPER; see role waterfall in `process/roles.md` |
+| BUILDER transitions to KEEPER when backlog is exhausted | No unassigned items **and** 2 open PRs = transition to KEEPER; 2-PR pause alone is not exhaustion; see role waterfall in `process/roles.md` |
+| KEEPER has no PR limit | KEEPER resolves customer issues reactively; the 2-PR cap does not apply; see `process/roles.md` |
 | RC state is a tag, not a branch | RC eligibility = `rc/v{N.M}` tag on `prototype/active`; tag is mutable until release; no separate RC branch (`process/git-workflow.md`) |
 | SCRIBE confirms with user before new iteration | Never start a new iteration independently; SCRIBE executes, user decides (`process/roles.md`) |
 | Ideas are surfaced, not implemented | BUILDER flags `[Idea]` entries in findings; SCRIBE collects and cross-checks with user before any action (`process/roles.md`) |

@@ -129,9 +129,9 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 <!-- section: ideas -->
 ## Ideas
 
-This section collects `[Idea]` tags surfaced during implementation. Ideas are cheap-win observations adjacent to the current work that could add value but are not required for any work item to complete. They are logged here by the BUILDER and resolved by the SCRIBE in coordination with the controller.
+This section collects `[Idea]` tags surfaced during implementation. Ideas are cheap-win observations adjacent to the current work that could add value but are not required for any work item to complete. They are logged here by the BUILDER and resolved by the SCRIBE in coordination with the user.
 
-**Lifecycle:** An idea entry lives in this section only while it is pending a decision. Once the SCRIBE and controller have acted on it — whether the idea is rejected, applied as a documentation or standards change, or converted into a backlog item — the entry is removed from the findings log. Only unresolved ideas remain here at any given time.
+**Lifecycle:** An idea entry lives in this section only while it is pending a decision. Once the SCRIBE and user have acted on it — whether the idea is rejected, applied as a documentation or standards change, or converted into a backlog item — the entry is removed from the findings log. Only unresolved ideas remain here at any given time.
 
 **Good candidates for [Idea] tags:**
 - Testing opportunities that would make a system more reliable or easier to change.
