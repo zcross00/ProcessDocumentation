@@ -14,6 +14,7 @@ There are two long-lived branches. Everything else is short-lived and deleted af
 | `prototype/active` | The single active prototype branch. All current development effort goes here. Long-running; survives across multiple design iterations. Work-item branches are short-lived and PR'd into this branch. Design documents, roadmaps, and findings live in the `design/` folder on this branch — they travel with the code. |
 | `prototype/{random-noun}` | A parallel prototype branch, created only when a second prototype direction needs to run concurrently alongside `prototype/active`. Example: `prototype/thornwood`. Rare — most work stays in `prototype/active`. |
 | `prototype/work-item/{id}` | Short-lived work-item branch. Each backlog item is implemented here and delivered to `prototype/active` via a pull request — never by direct commit. Branched from the current head of `prototype/active`. Example: `prototype/work-item/BL-3`. Delete after merge. |
+| `prototype/scribe/{topic}` | Short-lived SCRIBE branch. Used when the SCRIBE has a directional proposal that requires user approval: new iteration start, RC eligibility change, DRIFT resolution, goals update, design doc update, or idea disposition. Branched from the current head of `prototype/active`. Example: `prototype/scribe/iteration-2-start`. Delete after merge. |
 | `feature/{short-description}` | Isolated feature work not tied to a specific backlog item, branched off `prototype/active`. Use sparingly — prefer backlog items for all tracked work. Example: `feature/concept-decay`. |
 | `fix/{short-description}` | Bug fixes not already captured in a backlog item. |
 | `chore/{short-description}` | Non-functional changes — dependency updates, refactoring, doc cleanup. |
@@ -26,6 +27,7 @@ main                                    ← stable; tagged on every update
       ├── prototype/work-item/BL-1      ← work-item branch; merged via PR
       ├── prototype/work-item/BL-2      ← work-item branch; merged via PR
       ├── prototype/work-item/BL-3      ← work-item branch; merged via PR
+      ├── prototype/scribe/rc-v0.1      ← SCRIBE PR; directional proposal
       └── chore/update-jackson          ← non-backlog chore branch
 
 prototype/thornwood                     ← parallel prototype, if ever needed
@@ -35,7 +37,8 @@ prototype/thornwood                     ← parallel prototype, if ever needed
 - The existence of a `prototype/work-item/{id}` branch (pushed to the remote) is the signal that the item is already being worked. An agent must check for the branch's existence before picking up any item.
 - Design documents (`GOALS.md`, `GAME_DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BACKLOG.md`) live in the `design/` folder on `prototype/active`. They are updated as part of the work-item PR that resolves them — no separate design branch.
 - `main` is only updated when the iteration is ready for users. See Merge Strategy below.
-- **Exception — DRIFT backlog entries:** When any role identifies a DRIFT item (`DESIGN-DRIFT` or `CODE-DRIFT`), they add the entry to `design/BACKLOG.md` via a **direct commit to `prototype/active`**. This is the only permitted direct commit to `prototype/active` outside a SCRIBE session. See [`process/roles.md`](roles.md) for the full DRIFT workflow.
+- **Exception — DRIFT backlog entries:** When any role identifies a DRIFT item (`DESIGN-DRIFT` or `CODE-DRIFT`), they add the entry to `design/BACKLOG.md` via a **direct commit to `prototype/active`**. This and STATUS.md updates are the only permitted direct commits to `prototype/active` outside a SCRIBE session. See [`process/roles.md`](roles.md) for the full DRIFT workflow.
+- **SCRIBE PRs:** All directional SCRIBE work — new iteration, RC evaluation, DRIFT resolution, idea disposition, goals/design updates — is delivered via `prototype/scribe/{topic}` branches and PRs. Merging a SCRIBE PR is the user's approval of its direction. See [`process/roles.md`](roles.md) for full details.
 
 ---
 

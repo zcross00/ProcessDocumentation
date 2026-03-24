@@ -81,7 +81,7 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | BUILDER transitions to KEEPER when backlog is exhausted | No unassigned items **and** 2 open PRs = transition to KEEPER; 2-PR pause alone is not exhaustion; see role waterfall in `process/roles.md` |
 | KEEPER has no PR limit | KEEPER resolves customer issues reactively; the 2-PR cap does not apply; see `process/roles.md` |
 | RC state is a tag, not a branch | RC eligibility = `rc/v{N.M}` tag on `prototype/active`; tag is mutable until release; no separate RC branch (`process/git-workflow.md`) |
-| SCRIBE confirms with user before new iteration | Never start a new iteration independently; SCRIBE executes, user decides (`process/roles.md`) |
+| SCRIBE communicates via PR | All SCRIBE directional proposals (new iteration, RC evaluation, DRIFT resolution, idea disposition, goals/design updates) are delivered as `prototype/scribe/{topic}` PRs; merging = approval (`process/roles.md`) |
 | Ideas are surfaced, not implemented | BUILDER flags `[Idea]` entries in findings; SCRIBE collects and cross-checks with user before any action (`process/roles.md`) |
 | DRIFT items are filed by direct commit | `DESIGN-DRIFT` or `CODE-DRIFT` entries go to `BACKLOG.md` via direct commit to `prototype/active` — this is the only allowed exception to the no-direct-commits rule (`process/roles.md`) |
 | Resolved DRIFT is logged to `KNOWN_DRIFT.md` | SCRIBE adds DESIGN-DRIFT on resolution commit; BUILDER adds CODE-DRIFT on PR merge; log is never cleared (`process/roles.md`) |

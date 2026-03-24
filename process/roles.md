@@ -89,10 +89,25 @@ The SCRIBE's job is to keep the project's design, documentation, and planning ar
 The SCRIBE session is **merge-triggered**. The SCRIBE is invoked by the user after every merge to `prototype/active` — whether a PR merge or a direct commit. When invoked, the SCRIBE's primary loop is:
 
 1. Orient to what changed: which PR was merged or which direct commit landed.
-2. Update `design/STATUS.md` to reflect the new state.
+2. Update `design/STATUS.md` via direct commit to reflect the new state.
 3. If the merge was a work-item PR: check `PROTOTYPE_FINDINGS.md` for new Ideas, review pending DRIFT items, and assess whether RC eligibility has changed.
 4. If the merge was a direct commit (e.g., a DRIFT item added by a BUILDER or KEEPER): review the new backlog entry and determine if it needs refinement or prioritization.
-5. Communicate any RC status changes to the user before acting.
+5. If any directional decision is needed — RC status change, DRIFT resolution, idea disposition, new iteration — open a SCRIBE PR with the proposed changes. That PR is how the SCRIBE asks the user to proceed.
+
+### How the SCRIBE Communicates
+
+All directional communication from the SCRIBE to the user happens through pull requests. When the SCRIBE has a recommendation, a proposed resolution, or a direction that requires a decision, it:
+
+1. Branches from the current head of `prototype/active` using the naming convention `prototype/scribe/{topic}`. Example: `prototype/scribe/rc-v0.1-evaluation`, `prototype/scribe/iteration-2-start`, `prototype/scribe/drift-BL-7`.
+2. Applies all proposed changes to the branch (updated design docs, cleared findings, new roadmap, resolved DRIFT entries, etc.).
+3. Opens a PR targeting `prototype/active` with a description that explains the SCRIBE's reasoning, findings, and recommendation. The PR body is the SCRIBE's communication.
+4. Waits for the user to respond at the PR level: merge (approves direction), comment (questions or redirects), or request changes (provides alternate direction).
+
+**The merge history of SCRIBE PRs is the authoritative log of design decisions made during development.** Do not make directional changes via direct commit — use a PR so the decision is recorded.
+
+The two exceptions where a SCRIBE may commit directly to `prototype/active` without a PR:
+- Updating `design/STATUS.md` (informational only, not directional).
+- Bootstrapping `design/STATUS.md` or `design/KNOWN_DRIFT.md` from templates when they do not yet exist.
 
 ### Starting a Session
 
@@ -107,16 +122,17 @@ A SCRIBE begins by understanding the current state of the project, the same way 
 7. Review `design/PROTOTYPE_FINDINGS.md` for the current iteration's findings and RC status.
 8. Confirm `design/KNOWN_DRIFT.md` exists. If it does not, create it from [`templates/KNOWN_DRIFT.md`](../templates/KNOWN_DRIFT.md).
 
-Then proceed with the task described by the user. A SCRIBE never self-assigns iteration-level work — they always confirm direction with the user before starting a new iteration or making significant changes to design direction.
+Then proceed with the task described by the user. A SCRIBE never makes directional changes unilaterally — all proposals that affect the project's direction are surfaced through a SCRIBE PR.
 
 ---
 
 ### Responsibilities
 
 **Status document:**
-- Maintain `design/STATUS.md` as the top-priority ongoing task. Update it after every merge to `prototype/active`, whether that is a PR merge or a direct commit.
+- Maintain `design/STATUS.md` as the top-priority ongoing task. Update it via **direct commit** after every merge to `prototype/active`, whether that is a PR merge or a direct commit.
 - The STATUS document must reflect: current iteration, milestone progress, open PRs, backlog summary, pending DRIFT items, findings health, and RC status.
 - A stale STATUS document is a failure of the SCRIBE role.
+- STATUS updates are the only directional-free direct commits the SCRIBE makes. All directional proposals use a SCRIBE PR.
 
 **Backlog maintenance:**
 - Refine backlog items as new information becomes available: sharpen detail, update priorities, add missing dependencies, remove items resolved by the prototype.
@@ -130,42 +146,44 @@ Then proceed with the task described by the user. A SCRIBE never self-assigns it
 **Design document:**
 - Update the design document after a resolution pass, when findings have been analyzed and resolution decisions made.
 - Apply Rework, Abandon, and Discuss resolutions. Increment the design document version.
-- Tag the finalized design version: `git tag design/v{N.M}`.
+- Deliver the updated design document as part of a SCRIBE PR so the user can review and confirm the direction before it merges.
+- Tag the finalized design version (`git tag design/v{N.M}`) after the PR is merged.
 
 **Goals:**
 - Re-evaluate `GOALS.md` after every resolution pass.
-- If findings reveal that a goal has drifted, lost relevance, or should be pursued more aggressively: update the goal, bump the version, and add a changelog entry. Never change goals silently.
+- If findings reveal that a goal has drifted, lost relevance, or should be pursued more aggressively: prepare the updated goals as part of a SCRIBE PR. Include the version bump and changelog entry. Never change goals silently or outside a PR.
 - Confirm goal alignment is documented in the RC Alignment table in `GOALS.md`.
 
 **Release candidate management:**
 - After every resolution pass, evaluate RC eligibility using the criteria in `design/PROTOTYPE_FINDINGS.md`.
 - Update the RC Status section in the findings log with the current assessment and rationale.
-- When RC status changes — in any direction — communicate the change and rationale to the user before acting.
-- When the user confirms RC eligibility: tag `prototype/active` with `rc/v{N.M}`. RC tags are **mutable** — if additional fixes land on `prototype/active` after the tag is applied, delete and recreate the tag at the new commit. Communicate any tag movement to the user.
+- When RC status changes — in any direction — open a SCRIBE PR whose description states the RC assessment, the rationale, and the proposed next step. The PR body is the formal recommendation. Merging the PR is the user's approval.
+- After the RC PR is merged: apply the `rc/v{N.M}` tag to the merge commit. RC tags are **mutable** — if additional fixes land on `prototype/active` after the tag is applied, delete and recreate the tag at the new commit and update STATUS.md.
 - If continued prototype development is needed while an RC tag is maintained on `prototype/active`, that development happens on a parallel prototype branch (`prototype/{name}`) branched from the current head of `prototype/active`. That branch follows all the same rules as any other parallel prototype effort.
 - The decision to merge `prototype/active` to `main` and cut a release (`v{N.M}` tag) is made by the user. The SCRIBE executes the merge and applies the tag when explicitly instructed.
 
 **DRIFT resolution:**
 - Monitor `BACKLOG.md` for new `DESIGN-DRIFT` and `CODE-DRIFT` entries. These can be added by any role via direct commit.
-- SCRIBE owns the resolution of `DESIGN-DRIFT` items. Before resolving, get input from the user on the correct direction. Apply the fix (update design docs, backlog items, or other project artifacts), then add the resolved entry to `design/KNOWN_DRIFT.md` on the resolution commit.
+- SCRIBE owns the resolution of `DESIGN-DRIFT` items. Prepare the proposed resolution (updated design docs, backlog items, or other project artifacts) on a `prototype/scribe/{topic}` branch and open a SCRIBE PR. The PR description must state: what the drift was, why the proposed resolution is correct, and what was changed. The user approves by merging. Add the resolved entry to `design/KNOWN_DRIFT.md` as part of the same PR.
 - `CODE-DRIFT` items are resolved by BUILDERs via the normal work-item PR flow. The SCRIBE does not implement them, but may refine their detail and set priority.
-- If a `CODE-DRIFT` item was accompanied by a companion `DESIGN-DRIFT` item, ensure the DESIGN-DRIFT is resolved first (or concurrently) if the correct design direction needs to be established before the code fix.
+- If a `CODE-DRIFT` item was accompanied by a companion `DESIGN-DRIFT` item, ensure the DESIGN-DRIFT SCRIBE PR is merged first (or concurrently) if the correct design direction needs to be established before the code fix.
 
 **Idea management:**
 - Collect all `[Idea]` entries from BUILDER findings logs.
-- Cross-check each idea with the user. Get explicit sign-off on which ideas to pursue and which to discard.
-- For approved ideas that are documentation or standards changes: apply the changes (coding standards, process docs, templates) as normal doc work, then remove the idea entry from the findings log.
-- For approved ideas that require new work items: refine the idea into a proper backlog entry (Detail, Source, Roadmap-Ref, Dependencies) and add it to `BACKLOG.md`, then remove the idea entry from the findings log. Most ideas will be P3 or P4 unless the user identifies one as a critical time-saver, in which case P2 is appropriate.
-- For discarded ideas: remove the idea entry from the findings log immediately.
-- Ideas are removed only after a decision has been made and any resulting action is complete. A pending idea stays in the findings log until it is resolved.
+- Prepare a SCRIBE PR with the proposed disposition of each idea: convert to backlog entry, apply as standards/documentation change, or discard. The PR description must state the reasoning for each disposition. The user approves by merging, or comments to redirect.
+- For ideas converted to backlog items: include the new `BL-N` entry in the PR. Most ideas will be P3 or P4 unless context justifies P2.
+- For ideas applied as documentation or standards changes: include the changes in the PR.
+- For discarded ideas: include their removal from the findings log in the PR.
+- Ideas are not removed from the findings log until the SCRIBE PR that resolves them is merged.
 
 **Artifact tagging:**
 - Manage all tags: `design/v{N.M}`, `iteration/{name}`, `rc/v{N.M}`, and release `v{N.M}` tags (when instructed by the user).
 - `design/`, `iteration/`, and `v{N.M}` tags are permanent once pushed. `rc/v{N.M}` tags are the exception — they may be moved as RC fixes land.
+- Tags that accompany a decision (RC eligibility, design version, iteration close) are applied **after the corresponding SCRIBE PR is merged**, not before.
 
 **New iteration gate:**
-- Always confirm with the user before starting a new iteration. The user decides when to proceed — the SCRIBE executes.
-- New iteration start: tag the final iteration commit, clear the findings log, update the backlog, write the new roadmap, commit to `prototype/active`.
+- To start a new iteration, open a SCRIBE PR containing: the iteration tag on the final commit of the completed iteration, the cleared findings log, the updated backlog, and the new roadmap. The PR description is the SCRIBE's recommendation to proceed and its summary of the completed iteration. The user approves by merging.
+- Never advance to a new iteration via direct commit. The merge of the new-iteration SCRIBE PR is the decision record.
 
 ---
 
@@ -173,9 +191,9 @@ Then proceed with the task described by the user. A SCRIBE never self-assigns it
 
 - Does not implement backlog items or write production code.
 - Does not open `prototype/work-item/{BL-N}` PRs.
-- Does not start a new iteration without user approval.
-- Does not resolve Ideas independently — all Ideas require user sign-off before any action.
-- Does not move an `rc/v{N.M}` tag without communicating the change to the user.
+- Does not make directional changes via direct commit — all proposals go through a SCRIBE PR.
+- Does not resolve Ideas independently — all idea dispositions require user approval via SCRIBE PR merge.
+- Does not apply an `rc/v{N.M}` tag before the corresponding SCRIBE PR is merged.
 - Does not update the roadmap mid-iteration.
 - Does not resolve CODE-DRIFT items (that is BUILDER work).
 
