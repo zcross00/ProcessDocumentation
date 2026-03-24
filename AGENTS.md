@@ -83,9 +83,10 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | RC state is a tag, not a branch | RC eligibility = `rc/v{N.M}` tag on `prototype/active`; tag is mutable until release; no separate RC branch (`process/git-workflow.md`) |
 | SCRIBE communicates via PR | All SCRIBE directional proposals (new iteration, RC evaluation, DRIFT resolution, idea disposition, goals/design updates) are delivered as `prototype/scribe/{topic}` PRs; merging = approval (`process/roles.md`) |
 | Ideas are surfaced, not implemented | BUILDER flags `[Idea]` entries in findings; SCRIBE collects and cross-checks with user before any action (`process/roles.md`) |
-| DRIFT items are filed by direct commit | `DESIGN-DRIFT` or `CODE-DRIFT` entries go to `BACKLOG.md` via direct commit to `prototype/active` — this is the only allowed exception to the no-direct-commits rule (`process/roles.md`) |
+| BUILDERs make no direct commits | All BUILDER output (code, BACKLOG updates, findings, drift entries) travels through a work-item PR — no direct commits to `prototype/active` (`process/roles.md`, `process/git-workflow.md`) |
+| DRIFT entries go in the work-item PR | BUILDERs add `CODE-DRIFT` / `DESIGN-DRIFT` entries to `BACKLOG.md` on their work-item branch; they land on `prototype/active` when the PR merges (`process/git-workflow.md`) |
 | Resolved DRIFT is logged to `KNOWN_DRIFT.md` | SCRIBE adds DESIGN-DRIFT on resolution commit; BUILDER adds CODE-DRIFT on PR merge; log is never cleared (`process/roles.md`) |
-| `design/STATUS.md` updated after every merge | SCRIBE maintains STATUS as top-priority ongoing task; a stale STATUS is a SCRIBE failure (`templates/STATUS.md`) |
+| `design/STATUS.md` is SCRIBE-only | SCRIBE updates STATUS via direct commit after every merge; BUILDERs do not touch STATUS.md; a stale STATUS is a SCRIBE failure (`process/roles.md`) |
 | Read access is unrestricted by role | SCRIBEs may inspect code for design adherence; BUILDERs may inspect design docs for consistency; roles define what you produce, not what you read (`process/roles.md`) |
 | Design documents live in `design/` on `prototype/active` | No separate design branch; no cherry-picking design commits (`process/git-workflow.md`) |
 | Tag design versions: `design/v{N.M}` | Tag on `prototype/active` when a design doc version is finalized (`process/git-workflow.md`) |

@@ -73,12 +73,14 @@ Ideas are **not resolved by the BUILDER**. Surface them in the findings log and 
 
 Any role — including BUILDER — can identify and log a drift item when they observe an inconsistency that conflicts with stated goals. See the **Drift** section below for the full definition and how to log drift items.
 
-The BUILDER specifically: when implementing a work item, if the code does not match what the design document specifies (or the stated goal), log a `CODE-DRIFT` item. If the gap also implies a documentation inconsistency, log a companion `DESIGN-DRIFT` item.
+The BUILDER specifically: when implementing a work item, if the code does not match what the design document specifies (or the stated goal), log a `CODE-DRIFT` entry in `BACKLOG.md` as part of the work-item PR commits. Do not commit drift entries directly to `prototype/active`. If the gap also implies a documentation inconsistency, log a companion `DESIGN-DRIFT` entry in the same PR.
 
 ---
 
 ### What a BUILDER Does Not Do
 
+- Does not make direct commits to `prototype/active` for any reason. All BUILDER output — code changes, `BACKLOG.md` updates, `PROTOTYPE_FINDINGS.md` entries, drift entries — travels through a work-item PR.
+- Does not update `design/STATUS.md`. STATUS is owned exclusively by the SCRIBE and is updated after every merge.
 - Does not update the design document.
 - Does not modify `GOALS.md`.
 - Does not update the roadmap.
@@ -135,10 +137,11 @@ Then proceed with the task described by the user. A SCRIBE never makes direction
 ### Responsibilities
 
 **Status document:**
-- Maintain `design/STATUS.md` as the top-priority ongoing task. Update it via **direct commit** after every merge to `prototype/active`, whether that is a PR merge or a direct commit.
+- Maintain `design/STATUS.md` as the top-priority ongoing task. Update it via **direct commit to `prototype/active`** after every merge, whether that is a PR merge or a direct commit.
 - The STATUS document must reflect: current iteration, milestone progress, open PRs, backlog summary, pending DRIFT items, findings health, and RC status.
 - A stale STATUS document is a failure of the SCRIBE role.
-- STATUS updates are the only directional-free direct commits the SCRIBE makes. All directional proposals use a SCRIBE PR.
+- STATUS.md is the exclusive responsibility of the SCRIBE. BUILDERs do not touch it.
+- STATUS updates are the only directional-free direct commits the SCRIBE makes outside of bootstrapping. All directional proposals use a SCRIBE PR.
 
 **Backlog maintenance:**
 - Refine backlog items as new information becomes available: sharpen detail, update priorities, add missing dependencies, remove items resolved by the prototype.

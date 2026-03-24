@@ -37,7 +37,9 @@ prototype/thornwood                     ← parallel prototype, if ever needed
 - The existence of a `prototype/work-item/{id}` branch (pushed to the remote) is the signal that the item is already being worked. An agent must check for the branch's existence before picking up any item.
 - Design documents (`GOALS.md`, `GAME_DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BACKLOG.md`) live in the `design/` folder on `prototype/active`. They are updated as part of the work-item PR that resolves them — no separate design branch.
 - `main` is only updated when the iteration is ready for users. See Merge Strategy below.
-- **Exception — DRIFT backlog entries:** When any role identifies a DRIFT item (`DESIGN-DRIFT` or `CODE-DRIFT`), they add the entry to `design/BACKLOG.md` via a **direct commit to `prototype/active`**. This and STATUS.md updates are the only permitted direct commits to `prototype/active` outside a SCRIBE session. See [`process/roles.md`](roles.md) for the full DRIFT workflow.
+- **BUILDER direct commits are not permitted.** All BUILDER output — code, `BACKLOG.md` updates, `PROTOTYPE_FINDINGS.md` entries, and drift log entries — travels through a work-item PR. A BUILDER claiming a work item is visible via the remote branch. Their work lands on `prototype/active` only when the PR is merged.
+- **DRIFT entries from BUILDERs go in their PR.** When a BUILDER identifies a `CODE-DRIFT` or `DESIGN-DRIFT` item, they add the entry to `design/BACKLOG.md` as a commit on their current work-item branch, not via a direct commit to `prototype/active`.
+- **STATUS.md direct commits are SCRIBE-only.** The SCRIBE updates `design/STATUS.md` via direct commit to `prototype/active` after every merge. No other role touches this file.
 - **SCRIBE PRs:** All directional SCRIBE work — new iteration, RC evaluation, DRIFT resolution, idea disposition, goals/design updates — is delivered via `prototype/scribe/{topic}` branches and PRs. Merging a SCRIBE PR is the user's approval of its direction. See [`process/roles.md`](roles.md) for full details.
 
 ---
@@ -93,6 +95,9 @@ Build everything described in the item's Detail section. This includes:
 - Tests or verification as required by the item or applicable standards.
 - Any updates to findings (`PROTOTYPE_FINDINGS.md`) and balance notes that the item warrants.
 - Removing the resolved item from `BACKLOG.md` as part of the final commit.
+- Any `CODE-DRIFT` or `DESIGN-DRIFT` entries identified during the work — add them to `BACKLOG.md` on the work-item branch, not via direct commit to `prototype/active`.
+
+All of this lands on `prototype/active` through the PR. The BUILDER makes no direct commits to `prototype/active`.
 
 Do not implement anything beyond the item's stated scope. If adjacent issues are found, add them as new BL-N items in `BACKLOG.md` with the next available ID.
 
