@@ -75,6 +75,7 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Active prototype branch is `prototype/active` | All development goes here; never commit work-item work directly to this branch (`process/git-workflow.md`) |
 | Work-item branches named `prototype/work-item/{BL-N}` | Short-lived; branch from `prototype/active`, push immediately to claim the item, merged via PR, deleted after merge (`process/git-workflow.md`) |
 | Delete work-item branch after PR merge | After merge, delete both the remote and local work-item branch immediately; do not leave stale branches on the remote (`process/git-workflow.md`) |
+| Remove resolved backlog item on merge | Delete the item's table row and detail block from `BACKLOG.md` as part of the final PR commit; reference `Closes BL-N` in the commit message (`process/git-workflow.md`) |
 | Merge available work-item commits before submitting PR | Before opening a PR, fetch and merge commits from other open work-item branches that touch the same files; resolve conflicts before pushing (`process/git-workflow.md`) |
 | BUILDERs actively watch for merge conflicts | Pull `prototype/active` during implementation and rebase/merge to catch conflicts early, not at PR time (`process/git-workflow.md`) |
 | SCRIBE always works from `prototype/active` | All SCRIBE direct commits and SCRIBE PR branches originate from `prototype/active`; never from a work-item or other branch (`process/roles.md`) |
