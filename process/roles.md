@@ -22,7 +22,13 @@ Refer to this file at the start of any agent session to confirm the assigned rol
 
 ---
 
-## BUILDER
+## Shared Principles
+
+These apply to every role, regardless of assignment:
+
+**Read access is unrestricted.** No role is barred from inspecting any part of the repository. A SCRIBE reading production code to assess design adherence is expected. A BUILDER reading design documents or goals to verify consistency with their implementation is expected. Roles define *what you are responsible for producing*, not *what you are allowed to read*.
+
+**Write access follows role boundaries.** Reading is free; making changes is not. A BUILDER does not update design documents. A SCRIBE does not write production code. These boundaries exist to keep responsibilities clear and the change log meaningful — not to prevent understanding.
 
 The BUILDER's job is to move backlog items from open to merged. All of their work happens on short-lived `prototype/work-item/{BL-N}` branches delivered via PR to `prototype/active`.
 

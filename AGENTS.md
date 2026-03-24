@@ -86,6 +86,7 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | DRIFT items are filed by direct commit | `DESIGN-DRIFT` or `CODE-DRIFT` entries go to `BACKLOG.md` via direct commit to `prototype/active` — this is the only allowed exception to the no-direct-commits rule (`process/roles.md`) |
 | Resolved DRIFT is logged to `KNOWN_DRIFT.md` | SCRIBE adds DESIGN-DRIFT on resolution commit; BUILDER adds CODE-DRIFT on PR merge; log is never cleared (`process/roles.md`) |
 | `design/STATUS.md` updated after every merge | SCRIBE maintains STATUS as top-priority ongoing task; a stale STATUS is a SCRIBE failure (`templates/STATUS.md`) |
+| Read access is unrestricted by role | SCRIBEs may inspect code for design adherence; BUILDERs may inspect design docs for consistency; roles define what you produce, not what you read (`process/roles.md`) |
 | Design documents live in `design/` on `prototype/active` | No separate design branch; no cherry-picking design commits (`process/git-workflow.md`) |
 | Tag design versions: `design/v{N.M}` | Tag on `prototype/active` when a design doc version is finalized (`process/git-workflow.md`) |
 | Tag iterations: `iteration/{name}` | Tag final commit of each iteration on `prototype/active` before clearing findings (`process/git-workflow.md`) |
