@@ -29,6 +29,8 @@ This is a living document. It records observations made during prototype impleme
 - **[Abandon]** — Assumption may fall into the same reasons as Rework, but the decision has been made to move away from implementing this functionality in future iterations. Any replacements or effects on other features will be called out.
 - **[Discuss]** — Assumption needs major rework or potentially abandonment, but the direction has broader implications to both confirmed and unconfirmed assumptions. This discussion will take place elsewhere, and findings and final direction will be moved to the appropriate categories before the next design iteration.
 
+Any finding entry may also carry an **[Idea]** tag to flag a cheap-win opportunity that is adjacent to the work but not required to deliver it. See the Idea section below.
+
 Findings progress toward a **design resolution** pass after the prototype is complete. Resolved findings feed back into the next design document version and define the following prototype's scope.
 
 This document also tracks **release candidate eligibility**. See the Release Candidate Status section at the bottom.
@@ -119,7 +121,31 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
   - Do not log things that are simply "unpolished" — those are [Rework] findings. Technical Concerns are systemic.
   - [Pressing] concerns should appear in the next iteration's ROADMAP as explicit tasks or preconditions.
   - [Future] concerns should be referenced in the Design Document Recommendations under the Findings Summary.
+  - If a TC suggests that a new coding standard or practice could prevent the problem class entirely, append an [Idea] tag to the same entry.
 -->
+
+---
+
+<!-- section: ideas -->
+## Ideas
+
+This section collects `[Idea]` tags surfaced during implementation. Ideas are cheap-win observations adjacent to the current work that could add value but are not required for any work item to complete. They are logged here by the BUILDER and resolved by the SCRIBE in coordination with the controller.
+
+**Good candidates for [Idea] tags:**
+- Testing opportunities that would make a system more reliable or easier to change.
+- Narrow security improvements that could close a specific exposure.
+- Extensibility hooks that would enable future work at low cost.
+- Coding patterns to adopt or avoid — patterns that provide no benefit and would serve future technical health to drop.
+
+Ideas must be **cheap wins**. If an idea requires major structural changes or significant effort, it is a backlog item, not an Idea.
+
+<!-- item: Idea-1 -->
+### [Idea-1] {{Idea title}}
+
+**Observation:** {{What was noticed that prompted this idea.}}  
+**Potential value:** {{What would improve if this were adopted: reliability, security, extensibility, or maintainability.}}  
+**Effort:** {{Estimate: trivial / low / medium. If medium or higher, reconsider whether this is really a backlog item instead.}}  
+**SCRIBE action:** {{Pending / Approved / Discarded}} — {{Notes from controller cross-check, if resolved.}}
 
 ---
 

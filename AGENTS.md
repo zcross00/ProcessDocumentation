@@ -78,6 +78,9 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Open a PR after each work item; merge only after approval | Delegate complex review issues to a sub-agent; do not merge with blocking comments unresolved (`process/git-workflow.md`) |
 | Every roadmap item must have a `BL-N` backlog entry | Roadmap describes shape; backlog contains operational detail; no implementation without a backlog entry (`templates/BACKLOG.md`, `templates/ROADMAP.md`) |
 | Pause at 2 active PRs with no PRs to review | Do not open more than 2 concurrent work-item branches; see Agent Development Loop in `process/git-workflow.md` |
+| RC state is a tag, not a branch | RC eligibility = `rc/v{N.M}` tag on `prototype/active`; tag is mutable until release; no separate RC branch (`process/git-workflow.md`) |
+| SCRIBE confirms with controller before new iteration | Never start a new iteration independently; SCRIBE executes, controller decides (`process/roles.md`) |
+| Ideas are surfaced, not implemented | BUILDER flags `[Idea]` entries in findings; SCRIBE collects and cross-checks with controller before any action (`process/roles.md`) |
 | Design documents live in `design/` on `prototype/active` | No separate design branch; no cherry-picking design commits (`process/git-workflow.md`) |
 | Tag design versions: `design/v{N.M}` | Tag on `prototype/active` when a design doc version is finalized (`process/git-workflow.md`) |
 | Tag iterations: `iteration/{name}` | Tag final commit of each iteration on `prototype/active` before clearing findings (`process/git-workflow.md`) |

@@ -46,12 +46,14 @@ Tags are the permanent record of meaningful states. They replace long-lived bran
 |-----|---------------|---------|
 | `design/v{N.M}` | When a design document version is finalized and committed to `prototype/active`. | `design/v0.2` |
 | `iteration/{name}` | When a prototype iteration is complete: all milestones done, findings resolved, BACKLOG updated. Tag the final commit on `prototype/active`. | `iteration/prototype-awakening` |
+| `rc/v{N.M}` | When RC eligibility is confirmed by the SCRIBE after a resolution pass. Tag the current head of `prototype/active`. | `rc/v0.1` |
 | `v{major}.{minor}.{patch}` | When production-ready work is merged to `main`. Tag the merge commit. | `v1.0.0` |
 
 **Rules:**
-- Tags are permanent. Never delete or move a tag after it is pushed.
-- Annotated tags are preferred for `iteration/` and `v` releases: `git tag -a iteration/{name} -m "{message}"`.
+- Tags are permanent, with one exception: `rc/v{N.M}` tags are **mutable**. If additional fixes land on `prototype/active` after an RC tag is applied, the SCRIBE deletes and recreates the tag at the new commit and communicates the change to the controller. All other tags are permanent once pushed.
+- Annotated tags are preferred for `iteration/`, `rc/`, and `v` releases: `git tag -a {tag} -m "{message}"`.
 - Lightweight tags are acceptable for `design/` snapshots.
+- There is no RC branch. RC state is represented entirely by the `rc/v{N.M}` tag on `prototype/active`. If development must continue in parallel with a live RC tag, it branches off as a parallel prototype branch (`prototype/{name}`) — not off `main`.
 
 ---
 
