@@ -35,6 +35,7 @@ prototype/thornwood                     ← parallel prototype, if ever needed
 - The existence of a `prototype/work-item/{id}` branch (pushed to the remote) is the signal that the item is already being worked. An agent must check for the branch's existence before picking up any item.
 - Design documents (`GOALS.md`, `GAME_DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BACKLOG.md`) live in the `design/` folder on `prototype/active`. They are updated as part of the work-item PR that resolves them — no separate design branch.
 - `main` is only updated when the iteration is ready for users. See Merge Strategy below.
+- **Exception — DRIFT backlog entries:** When any role identifies a DRIFT item (`DESIGN-DRIFT` or `CODE-DRIFT`), they add the entry to `design/BACKLOG.md` via a **direct commit to `prototype/active`**. This is the only permitted direct commit to `prototype/active` outside a SCRIBE session. See [`process/roles.md`](roles.md) for the full DRIFT workflow.
 
 ---
 
@@ -50,7 +51,7 @@ Tags are the permanent record of meaningful states. They replace long-lived bran
 | `v{major}.{minor}.{patch}` | When production-ready work is merged to `main`. Tag the merge commit. | `v1.0.0` |
 
 **Rules:**
-- Tags are permanent, with one exception: `rc/v{N.M}` tags are **mutable**. If additional fixes land on `prototype/active` after an RC tag is applied, the SCRIBE deletes and recreates the tag at the new commit and communicates the change to the controller. All other tags are permanent once pushed.
+- Tags are permanent, with one exception: `rc/v{N.M}` tags are **mutable**. If additional fixes land on `prototype/active` after an RC tag is applied, the SCRIBE deletes and recreates the tag at the new commit and communicates the change to the user. All other tags are permanent once pushed.
 - Annotated tags are preferred for `iteration/`, `rc/`, and `v` releases: `git tag -a {tag} -m "{message}"`.
 - Lightweight tags are acceptable for `design/` snapshots.
 - There is no RC branch. RC state is represented entirely by the `rc/v{N.M}` tag on `prototype/active`. If development must continue in parallel with a live RC tag, it branches off as a parallel prototype branch (`prototype/{name}`) — not off `main`.
@@ -104,6 +105,7 @@ When the item is fully implemented and all tests pass:
    - Test results summary.
    - Any findings or balance notes updated as part of this work.
    - The commit message `Closes BL-N` reference.
+5. Follow [`standards/pr.md`](../standards/pr.md) when reviewing the PR before submitting. Apply the same checklist when reviewing others' PRs.
 
 **6. After submitting the PR, review any open PRs while waiting.**  
 If there are other open PRs targeting `prototype/active`, review them now. Leave comments, flag issues, or approve.

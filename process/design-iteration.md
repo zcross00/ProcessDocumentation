@@ -102,7 +102,7 @@ The findings log (`design/PROTOTYPE_FINDINGS.md`) is updated continuously as you
 4. Add the finding to the Resolution Tracker at the bottom of the findings log.
 
 **[Idea] tags:**  
-Anywhere in the findings log, an entry may be supplemented with an `[Idea]` tag to flag a cheap-win opportunity observed adjacent to the current work: testing gaps, narrow security exposures, extensibility hooks, or coding patterns worth adopting or avoiding. Ideas are not resolved by the BUILDER — they are surfaced in the findings log for the SCRIBE to collect and cross-check with the controller. See [`process/roles.md`](roles.md) for the full Idea workflow.
+Anywhere in the findings log, an entry may be supplemented with an `[Idea]` tag to flag a cheap-win opportunity observed adjacent to the current work: testing gaps, narrow security exposures, extensibility hooks, or coding patterns worth adopting or avoiding. Ideas are not resolved by the BUILDER — they are surfaced in the findings log for the SCRIBE to collect and cross-check with the user. See [`process/roles.md`](roles.md) for the full Idea workflow.
 
 After the prototype is complete (all milestones at ✅ or deliberately deferred), run a resolution pass:
 
@@ -128,10 +128,10 @@ At any resolution pass, evaluate whether the current prototype qualifies as a re
 
 **Tracking:**
 - RC eligibility is tracked in `design/PROTOTYPE_FINDINGS.md` under a dedicated **Release Candidate Status** section (see template).
-- After a resolution pass, the SCRIBE updates the RC Status section with the current assessment and rationale, then communicates any change in eligibility to the controller.
-- When RC status is confirmed, the SCRIBE applies an `rc/v{N.M}` tag to the current head of `prototype/active`. There is no separate RC branch. If additional fixes land on `prototype/active` after the tag is applied, the SCRIBE moves the tag to the new commit and informs the controller.
+- After a resolution pass, the SCRIBE updates the RC Status section with the current assessment and rationale, then communicates any change in eligibility to the user.
+- When RC status is confirmed, the SCRIBE applies an `rc/v{N.M}` tag to the current head of `prototype/active`. There is no separate RC branch. If additional fixes land on `prototype/active` after the tag is applied, the SCRIBE moves the tag to the new commit and informs the user.
 - If continued prototype development is needed while the RC tag is active, that development happens on a parallel prototype branch (`prototype/{name}`) branched from `prototype/active` — the same rules as any other parallel prototype effort.
-- The decision to ship — merging `prototype/active` to `main` and applying a release tag (`v{major}.{minor}.{patch}`) — is made by the controller. The SCRIBE executes the merge and applies the tag when explicitly instructed. See [`git-workflow.md`](git-workflow.md).
+- The decision to ship — merging `prototype/active` to `main` and applying a release tag (`v{major}.{minor}.{patch}`) — is made by the user. The SCRIBE executes the merge and applies the tag when explicitly instructed. See [`git-workflow.md`](git-workflow.md).
 
 ---
 
@@ -164,13 +164,13 @@ Then return to Phase 2: write the next milestone's ROADMAP entries based on the 
 
 ## Phase 8 — Prepare for the Next Iteration
 
-This phase is owned by the **SCRIBE**. The SCRIBE must confirm with the controller before beginning a new iteration. See [`process/roles.md`](roles.md).
+This phase is owned by the **SCRIBE**. The SCRIBE must confirm with the user before beginning a new iteration. See [`process/roles.md`](roles.md).
 
 There is no new branch to create. All continued work stays on `prototype/active`.
 
 1. **Tag the iteration.** Tag the final commit of the completed iteration on `prototype/active`: `git tag -a iteration/{name} -m "{iteration summary}"`. Push the tag. This is the permanent record of where the iteration ended.
 2. **Clear the findings log.** Reset `design/PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new iteration name, new design version, current date). Preserve the RC History. The previous iteration's findings have been consumed by the design document update — they do not carry forward.
-3. **Update the backlog.** Open `design/BACKLOG.md`. Remove items that were resolved during the completed iteration (git history records them as done). Add new items surfaced by the findings — Rework findings, Technical Concerns marked [Pressing], and any SCRIBE-approved Ideas that were converted to backlog entries. Assign priorities. Every new item must have a `BL-N` ID using the next available number.
+3. **Update the backlog.** Open `design/BACKLOG.md`. Remove items that were resolved during the completed iteration (git history records them as done). Add new items surfaced by the findings — Rework findings, Technical Concerns marked [Pressing], SCRIBE-approved Ideas that were converted to backlog entries, and any pending `DESIGN-DRIFT` or `CODE-DRIFT` items not yet carried over. Assign priorities. Every new item must have a `BL-N` ID using the next available number. Cross-reference `design/KNOWN_DRIFT.md` to confirm any pending DRIFT from the completed iteration has been logged there before clearing the findings.
 4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and `BACKLOG.md` priorities. Every item described in the roadmap must have a corresponding `BL-N` entry in the backlog before the iteration begins. The roadmap describes the *shape* of the work; the backlog contains the *operational detail*. Backlog item priorities must align with roadmap milestone order.
 5. **Commit and push.** A single `docs:` commit containing the updated design document, cleared findings, updated backlog, and new roadmap. This commit on `prototype/active` is the clean start of the next iteration.
 

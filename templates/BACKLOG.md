@@ -32,7 +32,7 @@ Git history is the log of resolved items. When an item is completed, remove it f
 Each item has:
 - **ID** — Sequential `BL-N`, never reused. If an item is removed, the number is retired, not recycled.
 - **Priority** — `P1` (must address next iteration), `P2` (important, schedule soon), `P3` (valuable but deferrable), `P4` (low urgency or speculative).
-- **Type** — `Feature`, `Rework`, `TechDebt`, `Bug`, `Design`, `Deferred`.
+- **Type** — `Feature`, `Rework`, `TechDebt`, `Bug`, `Design`, `Deferred`, `DESIGN-DRIFT`, `CODE-DRIFT`.
 - **Synopsis** — One-line description.
 - **Detail** — Any helpful context: what prompted this item, which finding or TC it came from, known constraints, related items.
 - **Source** — Where the item came from: a finding ID (e.g. `AW-M4-3`), a TC tag (e.g. `TC-1`), a direct observation, or `Next Iteration Direction`.
@@ -119,6 +119,8 @@ Each item has:
   - Each item must declare its Dependencies field. Blocked items are skipped until all listed IDs are merged.
   - The Branch field is set to `prototype/work-item/BL-N` when an agent creates and pushes the branch to claim the item. It remains — until then.
   - When an item is resolved: remove it from this file and reference BL-N in the commit message.
-  - When an iteration ends, do a backlog sweep: re-prioritize items based on findings, add new items from Rework findings, TC [Pressing] concerns, and the Next Iteration Direction section.
+  - When an iteration ends, do a backlog sweep: re-prioritize items based on findings, add new items from Rework findings, TC [Pressing] concerns, the Next Iteration Direction section, and any pending DRIFT items not yet addressed.
+  - DRIFT items (`DESIGN-DRIFT`, `CODE-DRIFT`) are added via **direct commit to `prototype/active`** by any role that identifies them — this is the only exception to the no-direct-commit rule. See [`process/roles.md`](../process/roles.md) for the full DRIFT workflow.
+  - When a DRIFT item is resolved, add the entry to `design/KNOWN_DRIFT.md` (SCRIBE on DESIGN-DRIFT resolution; BUILDER on CODE-DRIFT PR merge) before removing it from this backlog.
   - IDs are permanent identifiers — never renumber after assignment.
 -->
