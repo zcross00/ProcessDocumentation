@@ -131,6 +131,8 @@ Each entry uses a `[TC-N]` tag and one of two urgency levels:
 
 This section collects `[Idea]` tags surfaced during implementation. Ideas are cheap-win observations adjacent to the current work that could add value but are not required for any work item to complete. They are logged here by the BUILDER and resolved by the SCRIBE in coordination with the controller.
 
+**Lifecycle:** An idea entry lives in this section only while it is pending a decision. Once the SCRIBE and controller have acted on it — whether the idea is rejected, applied as a documentation or standards change, or converted into a backlog item — the entry is removed from the findings log. Only unresolved ideas remain here at any given time.
+
 **Good candidates for [Idea] tags:**
 - Testing opportunities that would make a system more reliable or easier to change.
 - Narrow security improvements that could close a specific exposure.
@@ -144,8 +146,11 @@ Ideas must be **cheap wins**. If an idea requires major structural changes or si
 
 **Observation:** {{What was noticed that prompted this idea.}}  
 **Potential value:** {{What would improve if this were adopted: reliability, security, extensibility, or maintainability.}}  
-**Effort:** {{Estimate: trivial / low / medium. If medium or higher, reconsider whether this is really a backlog item instead.}}  
-**SCRIBE action:** {{Pending / Approved / Discarded}} — {{Notes from controller cross-check, if resolved.}}
+**Effort:** {{Estimate: trivial / low / medium. If medium or higher, reconsider whether this is really a backlog item instead.}}
+
+<!--
+  SCRIBE: Once a decision is made and any resulting action is complete (doc change applied, backlog item added, or idea discarded), remove this entry entirely from the findings log.
+-->
 
 ---
 

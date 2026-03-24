@@ -114,8 +114,10 @@ Then proceed with the task described by the controller. A SCRIBE never self-assi
 **Idea management:**
 - Collect all `[Idea]` entries from BUILDER findings logs.
 - Cross-check each idea with the controller. Get explicit sign-off on which ideas to pursue and which to discard.
-- For approved ideas that are documentation or standards changes: apply the changes (coding standards, process docs, templates) as normal doc work.
-- For approved ideas that require new work items: refine the idea into a proper backlog entry (Detail, Source, Roadmap-Ref, Dependencies) and add it to `BACKLOG.md`. Most ideas will be P3 or P4 unless the controller identifies one as a critical time-saver, in which case P2 is appropriate.
+- For approved ideas that are documentation or standards changes: apply the changes (coding standards, process docs, templates) as normal doc work, then remove the idea entry from the findings log.
+- For approved ideas that require new work items: refine the idea into a proper backlog entry (Detail, Source, Roadmap-Ref, Dependencies) and add it to `BACKLOG.md`, then remove the idea entry from the findings log. Most ideas will be P3 or P4 unless the controller identifies one as a critical time-saver, in which case P2 is appropriate.
+- For discarded ideas: remove the idea entry from the findings log immediately.
+- Ideas are removed only after a decision has been made and any resulting action is complete. A pending idea stays in the findings log until it is resolved.
 
 **Artifact tagging:**
 - Manage all tags: `design/v{N.M}`, `iteration/{name}`, `rc/v{N.M}`, and release `v{N.M}` tags (when instructed by controller).
