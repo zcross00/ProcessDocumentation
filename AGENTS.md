@@ -42,12 +42,14 @@ Before adding a new class, writing a new doc, or refactoring anything, check whe
 
 1. Read [`process/design-iteration.md`](process/design-iteration.md) to understand the full cycle: goals → design → prototype → findings → RC evaluation → goals re-eval → updated design.
 2. All prototype work happens on `prototype/active`. There is no separate design branch. Design documents live in the `design/` folder on `prototype/active`.
-3. Milestones are developed on short-lived `prototype/{milestone-name}` branches and merged into `prototype/active` via PR — never direct commits.
-4. The `design/PROTOTYPE_FINDINGS.md` log should be updated as you build — findings accumulate continuously, not only at milestone completion.
+3. Work items are developed on short-lived `prototype/work-item/{BL-N}` branches and merged into `prototype/active` via PR — never direct commits. The existence of the remote branch signals that the item is claimed.
+4. Before starting any backlog item, verify that a `prototype/work-item/{BL-N}` branch does not already exist remotely. If it does, the item is claimed by another agent — skip it and pick the next unblocked item.
+5. Every item described in the roadmap must have a corresponding `BL-N` entry in `design/BACKLOG.md` before implementation begins. Priority aligns with roadmap milestone order.
+6. The `design/PROTOTYPE_FINDINGS.md` log should be updated as you build — findings accumulate continuously, not only at work-item completion.
 5. Use the four finding categories exactly as defined: **Confirm**, **Rework**, **Abandon**, **Discuss**. Do not invent new categories.
-6. Log architectural and structural concerns in the **Technical Concerns** section of the findings log using `[TC-N]` tags. Distinguish **[Pressing]** (address next iteration) from **[Future]** (track for later).
-7. After the resolution pass, evaluate RC eligibility using the criteria in the findings log's Release Candidate Status section before updating goals or the design document. RC eligibility does not automatically trigger a `main` merge — that is a separate release decision.
-8. At iteration end: tag `prototype/active` with `iteration/{name}`, update `design/BACKLOG.md`, clear the findings log, and write the new roadmap.
+7. Log architectural and structural concerns in the **Technical Concerns** section of the findings log using `[TC-N]` tags. Distinguish **[Pressing]** (address next iteration) from **[Future]** (track for later).
+8. After the resolution pass, evaluate RC eligibility using the criteria in the findings log's Release Candidate Status section before updating goals or the design document. RC eligibility does not automatically trigger a `main` merge — that is a separate release decision.
+9. At iteration end: tag `prototype/active` with `iteration/{name}`, update `design/BACKLOG.md`, clear the findings log, and write the new roadmap. Ensure every item in the new roadmap has a corresponding `BL-N` backlog entry.
 
 ### When making commits or branches
 
@@ -70,14 +72,17 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Doc headings follow template hierarchy | Don't invent new heading levels within a template (`style/documentation.md`) |
 | Goals defined in GOALS.md before design begins | Define goals first, then derive design pillars from them (`templates/GOALS.md`) |
 | Goals re-evaluated after every prototype resolution pass | Check alignment before updating the design document (`process/design-iteration.md`) |
-| Active prototype branch is `prototype/active` | All development goes here; never commit milestone work directly to this branch (`process/git-workflow.md`) |
-| Milestone branches named `prototype/{milestone-name}` | Short-lived; branch from `prototype/active`, merged via PR, deleted after merge (`process/git-workflow.md`) |
-| Open a PR after each milestone; merge only after approval | Delegate complex review issues to a sub-agent; do not merge with blocking comments unresolved (`process/git-workflow.md`) |
+| Active prototype branch is `prototype/active` | All development goes here; never commit work-item work directly to this branch (`process/git-workflow.md`) |
+| Work-item branches named `prototype/work-item/{BL-N}` | Short-lived; branch from `prototype/active`, push immediately to claim the item, merged via PR, deleted after merge (`process/git-workflow.md`) |
+| Remote branch existence = item claimed | Before picking up a backlog item, run `git fetch --prune` and check for an existing remote branch — skip if found (`process/git-workflow.md`) |
+| Open a PR after each work item; merge only after approval | Delegate complex review issues to a sub-agent; do not merge with blocking comments unresolved (`process/git-workflow.md`) |
+| Every roadmap item must have a `BL-N` backlog entry | Roadmap describes shape; backlog contains operational detail; no implementation without a backlog entry (`templates/BACKLOG.md`, `templates/ROADMAP.md`) |
+| Pause at 2 active PRs with no PRs to review | Do not open more than 2 concurrent work-item branches; see Agent Development Loop in `process/git-workflow.md` |
 | Design documents live in `design/` on `prototype/active` | No separate design branch; no cherry-picking design commits (`process/git-workflow.md`) |
 | Tag design versions: `design/v{N.M}` | Tag on `prototype/active` when a design doc version is finalized (`process/git-workflow.md`) |
 | Tag iterations: `iteration/{name}` | Tag final commit of each iteration on `prototype/active` before clearing findings (`process/git-workflow.md`) |
 | `main` only receives a merge when shipping to users | RC eligibility ≠ automatic `main` merge; merging to `main` is an explicit release decision (`process/git-workflow.md`) |
-| `design/BACKLOG.md` is the planning backlog | Use `BL-N` identifiers; update after each iteration; reference in commit messages (`templates/BACKLOG.md`) |
+| `design/BACKLOG.md` is the planning backlog | Use `BL-N` identifiers; `Roadmap-Ref`, `Dependencies`, and `Branch` fields required per item; update after each iteration; reference in commit messages (`templates/BACKLOG.md`) |
 
 ---
 

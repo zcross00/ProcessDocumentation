@@ -11,28 +11,29 @@ There are two long-lived branches. Everything else is short-lived and deleted af
 | Branch | Purpose |
 |--------|---------|
 | `main` | Always stable. Represents the version in users' hands — the last shipped, reviewed release. Never commit work-in-progress or prototype code here directly. Updated only when a completed prototype iteration is ready for users. |
-| `prototype/active` | The single active prototype branch. All current development effort goes here. Long-running; survives across multiple design iterations. Milestone branches are short-lived and PR'd into this branch. Design documents, roadmaps, and findings live in the `design/` folder on this branch — they travel with the code. |
+| `prototype/active` | The single active prototype branch. All current development effort goes here. Long-running; survives across multiple design iterations. Work-item branches are short-lived and PR'd into this branch. Design documents, roadmaps, and findings live in the `design/` folder on this branch — they travel with the code. |
 | `prototype/{random-noun}` | A parallel prototype branch, created only when a second prototype direction needs to run concurrently alongside `prototype/active`. Example: `prototype/thornwood`. Rare — most work stays in `prototype/active`. |
-| `prototype/{milestone-name}` | Short-lived milestone branch. Each milestone is developed here and delivered to `prototype/active` via a pull request — never by direct commit. Branched from the current head of `prototype/active`. Example: `prototype/era-hysteresis`. Delete after merge. |
-| `feature/{short-description}` | Isolated feature work, branched off `prototype/active`. Use for self-contained units of functionality that aren't tied to a specific roadmap milestone. Example: `feature/concept-decay`. |
-| `fix/{short-description}` | Bug fixes. Branched off `prototype/active`. Example: `fix/scroll-pane-skin`. |
-| `chore/{short-description}` | Non-functional changes — dependency updates, refactoring, doc cleanup. Example: `chore/update-jackson`. |
+| `prototype/work-item/{id}` | Short-lived work-item branch. Each backlog item is implemented here and delivered to `prototype/active` via a pull request — never by direct commit. Branched from the current head of `prototype/active`. Example: `prototype/work-item/BL-3`. Delete after merge. |
+| `feature/{short-description}` | Isolated feature work not tied to a specific backlog item, branched off `prototype/active`. Use sparingly — prefer backlog items for all tracked work. Example: `feature/concept-decay`. |
+| `fix/{short-description}` | Bug fixes not already captured in a backlog item. |
+| `chore/{short-description}` | Non-functional changes — dependency updates, refactoring, doc cleanup. |
 
 ### Branch Lifecycle
 
 ```
 main                                    ← stable; tagged on every update
  └── prototype/active                   ← long-lived; all development happens here
-      ├── prototype/era-hysteresis      ← milestone branch; merged via PR
-      ├── prototype/trade-picker        ← milestone branch; merged via PR
-      ├── feature/threat-engine-extract ← isolated feature; merged via PR
-      └── fix/scroll-pane-skin          ← bug fix; merged via PR
+      ├── prototype/work-item/BL-1      ← work-item branch; merged via PR
+      ├── prototype/work-item/BL-2      ← work-item branch; merged via PR
+      ├── prototype/work-item/BL-3      ← work-item branch; merged via PR
+      └── chore/update-jackson          ← non-backlog chore branch
 
 prototype/thornwood                     ← parallel prototype, if ever needed
 ```
 
-- Milestone and feature branches are short-lived. Delete after the PR is merged.
-- Design documents (`GOALS.md`, `GAME_DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BACKLOG.md`) live in the `design/` folder on `prototype/active`. They are updated directly — no separate design branch.
+- Work-item branches are short-lived. Delete after the PR is merged.
+- The existence of a `prototype/work-item/{id}` branch (pushed to the remote) is the signal that the item is already being worked. An agent must check for the branch's existence before picking up any item.
+- Design documents (`GOALS.md`, `GAME_DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BACKLOG.md`) live in the `design/` folder on `prototype/active`. They are updated as part of the work-item PR that resolves them — no separate design branch.
 - `main` is only updated when the iteration is ready for users. See Merge Strategy below.
 
 ---
@@ -54,45 +55,106 @@ Tags are the permanent record of meaningful states. They replace long-lived bran
 
 ---
 
-## Milestone PR Workflow
+## Work-Item PR Workflow
 
-All milestone implementation work lives on `prototype/{milestone-name}` branches. Milestones are delivered to `prototype/active` via pull requests — never by committing directly.
+All implementation work is driven by `BACKLOG.md`. Every item in the backlog has a `BL-N` identifier. Items are picked up in priority order (P1 before P2, P2 before P3, P4 last). Within a priority tier, items are picked in `BL-N` ascending order.
 
-### Creating a Milestone Branch
+### Agent Development Loop
 
-1. Branch from the current head of `prototype/active`.
-2. Name the branch `prototype/{milestone-name}`, using a short lowercase identifier matching the roadmap entry.
-3. Implement the milestone on this branch using the standard commit message format.
+This describes the full loop an AI agent follows when working the backlog:
 
-### Opening a Pull Request
+**1. Review open PRs first.**  
+Before picking up any new work, check for open PRs targeting `prototype/active`. If any exist, review them — read the diff, check for problems, and respond with comments or approval. If a PR has unresolved blocking issues identified by the agent after review, leave a review comment and continue.
 
-When the milestone's "Done when:" condition is satisfied and all tests pass:
+**2. Pick the highest unassigned item.**  
+Open `design/BACKLOG.md`. Starting at P1, find the first item that does not have an existing `prototype/work-item/{id}` remote branch. The existence of that branch means another agent instance is already working the item — skip it and move to the next.
 
-1. Push the milestone branch to the remote.
-2. Open a PR targeting `prototype/active`.
-3. The PR description must include:
-   - A reference to the ROADMAP milestone name and its "Done when:" condition.
-   - The test results summary (number of tests passing).
-   - A note confirming that the findings log was updated for this milestone.
-4. Assign the PR for review.
+**Check for blockers first.** If the item has a `Dependencies:` field listing unresolved items, skip it and move to the next eligible item.
 
-### Ongoing PR Check-ins
+**3. Assign by creating and pushing the branch immediately.**  
+Once an item is selected, create the branch and push it to the remote before doing any implementation work. The pushed branch is the assignment signal — it prevents two agents from picking up the same item.
 
-After a PR is open, check in periodically to:
+```bash
+git checkout prototype/active
+git pull
+git checkout -b prototype/work-item/{BL-N}
+git push -u origin prototype/work-item/{BL-N}
+```
 
-- **Respond to review comments** — acknowledge questions, clarify intent, and confirm planned changes.
-- **Address flagged issues** — if a reviewer raises a concern, resolve it on the milestone branch and push. Delegate complex investigation or rework to a sub-agent, passing the sub-agent: the PR context, the specific comment, and the affected code. Confirm the sub-agent's output before pushing.
-- **Do not re-open merged work** — if a concern surfaces after merge, log it as a finding in the findings log or a backlog item.
+**4. Implement the work item.**  
+Build everything described in the item's Detail section. This includes:
+- All code changes specified.
+- Tests or verification as required by the item or applicable standards.
+- Any updates to findings (`PROTOTYPE_FINDINGS.md`) and balance notes that the item warrants.
+- Removing the resolved item from `BACKLOG.md` as part of the final commit.
 
-### Merging
+Do not implement anything beyond the item's stated scope. If adjacent issues are found, add them as new BL-N items in `BACKLOG.md` with the next available ID.
 
-Merge only after:
+**5. Submit a PR.**  
+When the item is fully implemented and all tests pass:
 
-- At least one approval is recorded.
-- All blocking review comments are resolved.
-- All tests pass.
+1. Push the final commits to the work-item branch.
+2. Remove the item from `BACKLOG.md` as part of this final commit.
+3. Open a PR targeting `prototype/active`.
+4. The PR description must include:
+   - The backlog item ID and its synopsis.
+   - The done-when condition from the item detail (or derived from it).
+   - Test results summary.
+   - Any findings or balance notes updated as part of this work.
+   - The commit message `Closes BL-N` reference.
 
-Use a **squash merge** if the milestone branch contains many fixup or WIP commits. Use a **merge commit** if the milestone commit history is meaningful and worth preserving. Delete the milestone branch after merging.
+**6. After submitting the PR, review any open PRs while waiting.**  
+If there are other open PRs targeting `prototype/active`, review them now. Leave comments, flag issues, or approve.
+
+**7. Continue to the next item if capacity allows.**  
+If there are no PRs to review, and the agent has fewer than **two active open PRs**, continue to the next highest unassigned item and repeat from step 3.
+
+If the agent has **two active open PRs** and no PRs to review: **pause**. Do not pick up additional work until one of the open PRs is merged or requires response.
+
+**8. Respond to PR feedback.**  
+When a reviewer comments on an open PR:
+- Acknowledge questions and clarify intent.
+- Address flagged issues on the work-item branch and push.
+- Delegate complex investigation to a sub-agent, passing the PR context, specific comment, and affected code. Confirm output before pushing.
+- Once feedback is resolved, push and re-request review. Do not re-open merged work.
+
+**9. After merge, check for more PRs to review, then continue the loop.**  
+Every merge is a signal to return to step 1: review open PRs, then pick up the next item.
+
+---
+
+### Work-Item ID Rules
+
+Work-item IDs follow the `BL-N` convention defined in `BACKLOG.md`:
+- IDs are sequential integers. The next ID is always `(highest BL-N currently in the document) + 1`.
+- IDs are never reused. When an item is removed from the backlog after being resolved, its ID is retired.
+- This ensures IDs don't clash across concurrent work and can be traced in git history even after the item is removed.
+
+---
+
+### Checking for an Existing Branch
+
+```bash
+# Check if a work-item branch is already claimed
+git fetch --prune
+git branch -r | grep prototype/work-item/BL-{N}
+```
+
+If the branch exists remotely, the item is claimed. Move to the next eligible item.
+
+---
+
+### Removing an Item from the Backlog on Merge
+
+When writing the PR's final commit (the one that completes the implementation), remove the item from `BACKLOG.md`:
+- Delete the item's row from the priority table.
+- Delete the item's `<!-- item: BL-N -->` detail block.
+- Do not renumber remaining items.
+- Reference `Closes BL-N` in the commit message.
+
+This makes the PR itself the authoritative record that the item was resolved — the git history preserves it permanently.
+
+---
 
 ---
 
@@ -143,7 +205,7 @@ docs: update ROADMAP to mark milestones 1-3 complete
 
 ## Merge Strategy
 
-- **Milestone / feature / fix branches → `prototype/active`:** PR required. Squash merge or merge commit depending on whether commit history is worth preserving. Delete the branch after merge.
+- **Work-item branches → `prototype/active`:** PR required. Squash merge or merge commit depending on whether commit history is worth preserving. Delete the work-item branch after merge.
 - **`prototype/active` → `main`:** Merge commit when the iteration is ready for users. Run `git tag v{major}.{minor}.{patch}` on the merge commit immediately after.
 - **Never force-push to `main` or `prototype/active`** — these are permanent reference points. Tags on these branches are also permanent.
 - **Parallel prototype branches:** Treated as long-lived like `prototype/active`. Merge to `main` independently if they ship. Never merge into each other without explicit intent.
@@ -191,12 +253,11 @@ Don't commit IDE project files or runtime save data.
 | Branch | Purpose |
 |--------|---------|
 | `main` | Always stable. Represents the last reviewed, complete state. Never commit experimental or in-progress work here directly. |
-| `design` | Long-running branch for all design documents and goals. All design-adjacent documents — `GOALS.md`, `DESIGN_DOCUMENT.md`, `ROADMAP.md`, `PROTOTYPE_FINDINGS.md`, `BALANCE_NOTES.md` — live under the `design/` folder and are updated here. Merged to `main` when a design version is finalized. |
-| `prototype/{name}` | Prototype phase branch. Branched from `main` for a fresh start, or from the previous prototype branch for a continuation iteration. Long-running; milestone branches are merged here via pull requests. Merged to `main` when the prototype is complete and reviewed. Example: `prototype/alpha`. |
-| `prototype/{name}/{milestone}` | Milestone work branch within a prototype phase. Each milestone is developed here and delivered to the parent prototype branch via a pull request — never by direct commit. Branched from the current head of `prototype/{name}`. Example: `prototype/awakening/m4`. |
-| `rc/{name}` | Release candidate branch. Branched from the corresponding prototype branch after RC eligibility is confirmed in the findings log. Only stabilization, polish, and bug fixes go here — no new features. Example: `rc/alpha-1`. |
-| `feature/{short-description}` | Isolated feature work, branched off the active prototype branch. Use for self-contained units of functionality. Example: `feature/concept-decay`. |
-| `fix/{short-description}` | Bug fixes. Example: `fix/effort-display-hardcoded`. |
+| `prototype/active` | Long-running prototype branch. All development effort goes here. Work-item branches are short-lived and PR'd here via pull requests. Design documents, roadmaps, and findings live in the `design/` folder. |
+| `prototype/work-item/{id}` | Short-lived work-item branch. Each backlog item is developed here and merged via PR. The existence of this branch on the remote signals the item is claimed. Branched from `prototype/active`; deleted after merge. Example: `prototype/work-item/BL-3`. |
+| `rc/{name}` | Release candidate branch. Branched from `prototype/active` after RC eligibility is confirmed. Only stabilization and bug fixes. Example: `rc/alpha-1`. |
+| `feature/{short-description}` | Isolated feature work not tied to a backlog item. Use sparingly. Example: `feature/concept-decay`. |
+| `fix/{short-description}` | Bug fixes not captured in a backlog item. Example: `fix/effort-display-hardcoded`. |
 | `chore/{short-description}` | Non-functional changes — dependency updates, refactoring, doc cleanup. Example: `chore/update-jackson`. |
 
 ### Branch Lifecycle

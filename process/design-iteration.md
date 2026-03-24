@@ -45,35 +45,41 @@ The design document (`DESIGN_DOCUMENT.md` or equivalent) defines the intended pr
 
 ---
 
-## Phase 2 — Create the Roadmap
+## Phase 2 — Create the Roadmap and Backlog
 
-The roadmap (`design/ROADMAP.md`) breaks the design document into milestones — ordered, scoped deliverables that together realize the design.
+The roadmap (`design/ROADMAP.md`) describes the intended milestones for the iteration — the thematic groupings of work and how they build on each other. It is the *narrative* plan.
 
-**Milestone structure:**
-- One milestone per coherent system or feature group.
-- Each milestone has a clear "Done when:" condition — a statement that can be evaluated yes or no.
-- Tasks within a milestone include the key files they affect.
-- Earlier milestones establish foundations; later milestones build on them.
+The backlog (`design/BACKLOG.md`) is the *operational* plan. Every piece of work described in the roadmap must have a corresponding `BL-N` entry in the backlog. The backlog is what agents and developers actually pick up.
 
-**Status tracking:**
-- `✅ Done` — fully complete, done-when condition met.
-- `🔄 Partial` — in progress or partially implemented.
-- `⬜ Not started` — not yet begun.
+**Rules for the roadmap:**
+- Each milestone should have a clear framing: what it delivers, why it comes when it does, and its done-when condition.
+- Milestones reference the `BL-N` items they contain.
+- The roadmap is written once per iteration at planning time. Implementation detail lives in the backlog, not the roadmap.
+
+**Rules for the backlog:**
+- Every item referenced in the roadmap must exist as a `BL-N` entry in `BACKLOG.md` before implementation begins.
+- Priority is informed by roadmap placement: items in earlier milestones get higher priority.
+- Every item that has a prerequisite (must not start until another item is complete) must declare it in a `Dependencies:` field, and is treated as blocked until all dependencies are resolved.
+- IDs are sequential and never reused. New item ID = (highest existing `BL-N` in the document) + 1.
+- Status tracking (`Branch:`) in the backlog item reflects whether a work branch exists.
+
+See [`templates/BACKLOG.md`](../templates/BACKLOG.md) for the full item format.
 
 ---
 
-## Phase 3 — Implement on a Prototype Branch
+## Phase 3 — Implement via the Backlog
 
-All prototype work lives on `prototype/active` — the single long-lived prototype branch. Individual milestones are developed on short-lived `prototype/{milestone-name}` branches and delivered via **pull requests** targeting `prototype/active`. The `main` branch holds the last stable state shipped to users.
+All prototype work lives on `prototype/active` — the single long-lived prototype branch. Individual work items are developed on short-lived `prototype/work-item/{BL-N}` branches and delivered via **pull requests** targeting `prototype/active`. The `main` branch holds the last stable state shipped to users.
 
-See [`git-workflow.md`](git-workflow.md) for the full branch and PR strategy, including the **Milestone PR Workflow** section.
+See [`git-workflow.md`](git-workflow.md) for the full work-item PR workflow and the **Agent Development Loop** section, which describes the complete cycle for picking up, implementing, and submitting work items.
 
 **Rules:**
-- Mark tasks `🔄 Partial` in the roadmap as you begin them.
-- Mark tasks `✅ Done` once the done-when condition is met and verified.
-- Don't mark milestones complete until every task in them is ✅.
-- When a milestone is complete, push the milestone branch and open a PR targeting `prototype/active`. Do not merge directly.
-- After opening a PR, check in periodically: respond to review comments, address flagged issues (delegating complex investigation or rework to a sub-agent where appropriate), and merge only after approval.
+- Never commit implementation work directly to `prototype/active`.
+- Pick items from the backlog in priority order. Check that the `prototype/work-item/{BL-N}` branch does not already exist remotely before starting — its existence means another agent has claimed it.
+- Blocked items (those with unresolved `Dependencies:`) must be skipped until all dependencies are resolved.
+- When a work item is fully implemented and tests pass: remove it from `BACKLOG.md`, update `PROTOTYPE_FINDINGS.md` and balance notes where relevant, and open a PR referencing `Closes BL-N`.
+- After opening a PR, review any other open PRs while waiting for feedback.
+- Do not hold more than two open PRs at once. If two PRs are open and there are no other PRs to review, pause and wait.
 
 ---
 
@@ -161,8 +167,8 @@ There is no new branch to create. All continued work stays on `prototype/active`
 
 1. **Tag the iteration.** Tag the final commit of the completed iteration on `prototype/active`: `git tag -a iteration/{name} -m "{iteration summary}"`. Push the tag. This is the permanent record of where the iteration ended.
 2. **Clear the findings log.** Reset `design/PROTOTYPE_FINDINGS.md` to the template structure with empty milestone sections, an empty Resolution Tracker, and fresh metadata (new iteration name, new design version, current date). Preserve the RC History. The previous iteration's findings have been consumed by the design document update — they do not carry forward.
-3. **Update the backlog.** Open `design/BACKLOG.md`. Remove items that were resolved during the completed iteration (git history records them as done). Add new items surfaced by the findings — Rework findings, Technical Concerns marked [Pressing], and Next Iteration Direction priorities. Assign priorities. This is the primary planning input for the next roadmap.
-4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and `BACKLOG.md` priorities. Pull the top-priority items into the next milestone set.
+3. **Update the backlog.** Open `design/BACKLOG.md`. Remove items that were resolved during the completed iteration (git history records them as done). Add new items surfaced by the findings — Rework findings, Technical Concerns marked [Pressing], and Next Iteration Direction priorities. Assign priorities. This is the primary planning input for the next roadmap. Every new item must have a `BL-N` ID using the next available number.
+4. **Write the new roadmap.** Build `design/ROADMAP.md` from the updated design document and `BACKLOG.md` priorities. Every item described in the roadmap must have a corresponding `BL-N` entry in the backlog before the iteration begins. The roadmap describes the *shape* of the work; the backlog contains the *operational detail*. Backlog item priorities must align with roadmap milestone order.
 5. **Commit and push.** A single `docs:` commit containing the updated design document, cleared findings, updated backlog, and new roadmap. This commit on `prototype/active` is the clean start of the next iteration.
 
 ---

@@ -36,6 +36,9 @@ Each item has:
 - **Synopsis** — One-line description.
 - **Detail** — Any helpful context: what prompted this item, which finding or TC it came from, known constraints, related items.
 - **Source** — Where the item came from: a finding ID (e.g. `AW-M4-3`), a TC tag (e.g. `TC-1`), a direct observation, or `Next Iteration Direction`.
+- **Roadmap-Ref** — Which ROADMAP milestone this item belongs to (e.g. `M1`, `M2`). Items not yet on the roadmap may use `Deferred`.
+- **Dependencies** — `BL-N` IDs that must be resolved before this item can start. Use `None` if there are no blockers. Blocked items must be skipped until all listed dependencies are merged.
+- **Branch** — `prototype/work-item/BL-N` when the item is claimed (remote branch exists), `—` when unassigned.
 
 ---
 
@@ -51,7 +54,10 @@ Each item has:
 
 <!-- item: BL-1 -->
 **BL-1 Detail:**  
-{{Describe what needs to happen, what prompted this, and any constraints or context that would help someone pick it up.}}
+{{Describe what needs to happen, what prompted this, and any constraints or context that would help someone pick it up.}}  
+**Roadmap-Ref:** {{M1}}  
+**Dependencies:** {{None}}  
+**Branch:** —
 
 ---
 
@@ -64,7 +70,10 @@ Each item has:
 
 <!-- item: BL-2 -->
 **BL-2 Detail:**  
-{{Detail}}
+{{Detail}}  
+**Roadmap-Ref:** {{M2}}  
+**Dependencies:** {{None}}  
+**Branch:** —
 
 ---
 
@@ -77,7 +86,10 @@ Each item has:
 
 <!-- item: BL-3 -->
 **BL-3 Detail:**  
-{{Detail}}
+{{Detail}}  
+**Roadmap-Ref:** {{M3}}  
+**Dependencies:** {{None}}  
+**Branch:** —
 
 ---
 
@@ -90,7 +102,10 @@ Each item has:
 
 <!-- item: BL-4 -->
 **BL-4 Detail:**  
-{{Detail}}
+{{Detail}}  
+**Roadmap-Ref:** {{M4}}  
+**Dependencies:** {{None}}  
+**Branch:** —
 
 ---
 
@@ -100,6 +115,9 @@ Each item has:
   - Add items as soon as they're identified. Don't wait until end of iteration.
   - One item per entry. Don't bundle unrelated work under one ID.
   - Priority P1 items should appear in the next ROADMAP. If they don't, explain why.
+  - Every item in the ROADMAP must have a corresponding BL-N entry before implementation begins. Roadmap placement determines priority (M1 → P1, M2 → P2, etc.).
+  - Each item must declare its Dependencies field. Blocked items are skipped until all listed IDs are merged.
+  - The Branch field is set to `prototype/work-item/BL-N` when an agent creates and pushes the branch to claim the item. It remains — until then.
   - When an item is resolved: remove it from this file and reference BL-N in the commit message.
   - When an iteration ends, do a backlog sweep: re-prioritize items based on findings, add new items from Rework findings, TC [Pressing] concerns, and the Next Iteration Direction section.
   - IDs are permanent identifiers — never renumber after assignment.

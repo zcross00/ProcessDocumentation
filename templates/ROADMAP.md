@@ -28,6 +28,8 @@ Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
 
 {{1–2 sentences describing what this milestone delivers and why it comes first.}}
 
+**Backlog:** {{BL-N, BL-N, …}} — All items listed here must exist as `BL-N` entries in `design/BACKLOG.md`.
+
 | # | Task | Status | Key Files |
 |---|------|--------|-----------|
 | 1.1 | **{{Task name.}}** {{One-sentence description of what to build and how.}} | ✅ | `{{file path}}` |
@@ -42,6 +44,8 @@ Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
 ## Milestone 2 — {{Name}}
 
 {{1–2 sentences describing what this milestone delivers and why it follows Milestone 1.}}
+
+**Backlog:** {{BL-N, BL-N, …}} — All items listed here must exist as `BL-N` entries in `design/BACKLOG.md`.
 
 | # | Task | Key Files |
 |---|------|-----------|
@@ -60,6 +64,7 @@ Legend: ✅ Done &nbsp;|&nbsp; 🔄 Partial &nbsp;|&nbsp; ⬜ Not started
   - Earlier milestones establish foundations (domain model, core loop, data persistence).
   - Later milestones build depth (AI, polish, edge cases).
   - Every milestone has a clear Done-when condition.
+  - Every item listed in the Backlog line of a milestone must have a corresponding BL-N entry in design/BACKLOG.md before implementation of that milestone begins. Roadmap milestone placement determines backlog priority (M1 → P1, M2 → P2, etc.).
   - Tasks reference the files they primarily affect — this makes finding related work fast.
 -->
 
