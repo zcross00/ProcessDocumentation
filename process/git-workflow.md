@@ -109,7 +109,11 @@ When the item is fully implemented and all tests pass:
 1. Fetch `origin` and merge any commits from other open work-item branches that target the same files or systems as your work. Resolve any conflicts before pushing. This reduces the merge burden for subsequent branches and keeps the integration surface clean.
 2. Push the final commits to the work-item branch.
 3. Remove the item from `BACKLOG.md` as part of this final commit.
-4. Open a PR targeting `prototype/active`.
+4. **Create a PR on GitHub** targeting `prototype/active`. Pushing the branch alone is not sufficient — the PR must be created on GitHub to be visible for review and merge. Use the `gh` CLI:
+   ```bash
+   gh pr create --repo {owner}/{repo} --head "prototype/work-item/{BL-N}" --base "prototype/active" --title "BL-N: {synopsis}" --body "{description}"
+   ```
+   Verify the PR was created with `gh pr list` before continuing.
 5. The PR description must include:
    - The backlog item ID and its synopsis.
    - The done-when condition from the item detail (or derived from it).
