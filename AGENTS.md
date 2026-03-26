@@ -25,6 +25,7 @@ Before adding a new class, writing a new doc, or refactoring anything, check whe
 2. Find the language-specific file in `standards/` and read it (e.g., [`standards/java.md`](standards/java.md) for Java work).
 3. Apply the naming, structure, and pattern rules described before generating or modifying any code.
 4. If the standard is silent on something, use the existing project code style as the local precedent.
+5. For Java projects: use the **`domain-model`** skill when adding a new class, enum, or record; use the **`standards-check-java`** skill for a pre-PR compliance check; use the **`test-writing`** skill when adding tests.
 
 ### When starting a new project
 
@@ -54,6 +55,8 @@ Before adding a new class, writing a new doc, or refactoring anything, check whe
 ### When making commits or branches
 
 1. Follow [`process/git-workflow.md`](process/git-workflow.md) for branch names and commit message format.
+2. Use the **`git-workflow`** skill for exact command sequences — including how to resolve `{owner}/{repo}` and diagnose PR publishing failures.
+3. Use the **`build-verify`** skill to compile and run all tests before opening any PR.
 
 ---
 
@@ -99,6 +102,29 @@ These are the highest-priority rules. Enforce them even when a project's existin
 | Tag iterations: `iteration/{name}` | Tag final commit of each iteration on `prototype/active` before clearing findings (`process/git-workflow.md`) |
 | `main` only receives a merge when shipping to users | RC eligibility ≠ automatic `main` merge; merging to `main` is an explicit release decision (`process/git-workflow.md`) |
 | `design/BACKLOG.md` is the planning backlog | Use `BL-N` identifiers; `Roadmap-Ref`, `Dependencies`, and `Branch` fields required per item; update after each iteration; reference in commit messages (`templates/BACKLOG.md`) |
+
+---
+
+## Skills
+
+Skills are pre-packaged, task-specific instruction files that live in `.github/skills/` in the project repo. They contain exact steps, commands, and decision rules for common workflows. Always prefer a skill over ad-hoc reasoning for the tasks it covers.
+
+| Skill | Trigger |
+|---|---|
+| `agent-orientation` | Start of every session |
+| `git-workflow` | Any branch, PR, or tagging operation |
+| `build-verify` | Before opening any PR |
+| `pr-review` | Reviewing a PR targeting `prototype/active` |
+| `backlog-entry` | Adding a new `BL-N` item |
+| `findings-entry` | Logging a finding to `PROTOTYPE_FINDINGS.md` |
+| `drift-logging` | Classifying a code/design inconsistency |
+| `scribe-duties` | Starting a SCRIBE session |
+| `keeper-sweep` | Starting a KEEPER session |
+| `test-writing` | Writing new JUnit 5 tests (Java projects) |
+| `domain-model` | Choosing JavaBean vs. record vs. enum (Java projects) |
+| `standards-check-java` | Pre-PR or KEEPER standards compliance check (Java projects) |
+
+Skill files are located at `.github/skills/{skill-name}/SKILL.md` within the project repo.
 
 ---
 
