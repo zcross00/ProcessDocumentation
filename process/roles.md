@@ -6,17 +6,20 @@ Every agent assigned to a project takes on exactly one role for the session. Rol
 
 ## Role Assignment and Waterfall
 
-Roles are assigned top-down. An agent proceeds to the next role only when the conditions of the current role are exhausted:
+Roles form a cycle. An agent begins as a BUILDER and advances to the next role only when the current role's available work is exhausted. Once KEEPER duties are complete, the cycle restarts at BUILDER.
 
-1. **If the agent is explicitly told it is a SCRIBE** — it is a SCRIBE. Begin the SCRIBE session flow.
-2. **Otherwise, assume BUILDER.** Pull the repo, orient to the backlog, and begin the development loop.
-3. **If the BUILDER exhausts its capacity** (no unassigned, unblocked work items remain **and** the agent has two active open PRs with no PRs to review) — it transitions to **KEEPER**. The 2-PR pause condition alone does not trigger KEEPER — that is a temporary hold, not exhaustion.
+1. **Default: BUILDER.** Assume BUILDER unless explicitly told otherwise. Pull the repo, orient to the backlog, and begin the development loop.
+2. **When the BUILDER exhausts its backlog** (no unassigned, unblocked work items remain) — transition to **SCRIBE**. Begin the SCRIBE session flow from the Starting a Session procedure.
+3. **When the SCRIBE exhausts its tasks** (STATUS is current, all pending DRIFT items have been surfaced, all Ideas have been adjudicated, RC assessment is current, no new iteration decision is open) — transition to **KEEPER**. Begin the KEEPER duty loop.
+4. **When the KEEPER exhausts its duties** — transition back to **BUILDER**. Re-orient to `design/BACKLOG.md`; new items may have surfaced as a result of KEEPER findings.
+
+If the user explicitly assigns a role ("you are a SCRIBE", "act as KEEPER"), that assignment overrides the waterfall for the session.
 
 The three active roles are:
 
 - **BUILDER** — Implements backlog items. Executes the development loop.
-- **SCRIBE** — Manages design documents, backlog health, STATUS, RC status, and inter-iteration continuity. Triggered by merges.
-- **KEEPER** — Handles external-facing inputs to the code: customer tickets, reported issues, and post-release problems. *(Role is partially defined — see KEEPER section below.)*
+- **SCRIBE** — Manages design documents, backlog health, STATUS, RC status, and inter-iteration continuity. Triggered by merges, role transition, or user direction.
+- **KEEPER** — Maintains project health: reviews PRs, sweeps for standards violations, plans testing, and flags architectural concerns.
 
 Refer to this file at the start of any agent session to confirm the assigned role before proceeding.
 
@@ -94,9 +97,9 @@ The BUILDER specifically: when implementing a work item, if the code does not ma
 
 The SCRIBE's job is to keep the project's design, documentation, and planning artifacts accurate and actionable. They do not implement features. They manage the continuity of the design across iterations and the health of the backlog between sessions.
 
-The SCRIBE session is **merge-triggered**. The SCRIBE is invoked by the user after every merge to `prototype/active` — whether a PR merge or a direct commit. When invoked, the SCRIBE's primary loop is:
+The SCRIBE session is triggered by: a merge to `prototype/active` (PR or direct commit), the BUILDER role exhausting its available work items, or explicit user direction. When invoked, the SCRIBE's primary loop is:
 
-1. Orient to what changed: which PR was merged or which direct commit landed.
+1. Orient to the current state. If the trigger was a merge, identify which PR or direct commit landed. If the trigger was a role transition or user direction, review `design/STATUS.md` and `design/PROTOTYPE_FINDINGS.md` to understand the current artifact state.
 2. Update `design/STATUS.md` via direct commit to reflect the new state.
 3. If the merge was a work-item PR: check `PROTOTYPE_FINDINGS.md` for new Ideas, review pending DRIFT items, and assess whether RC eligibility has changed.
 4. If the merge was a direct commit (e.g., a DRIFT item added by a BUILDER or KEEPER): review the new backlog entry and determine if it needs refinement or prioritization.
@@ -212,16 +215,48 @@ Then proceed with the task described by the user. A SCRIBE never makes direction
 
 ## KEEPER
 
-> **This role is partially defined.** Post-release workflows, fix branching, and external issue resolution processes are not yet fully specified. This section establishes context and intent so the role can be built out when the project reaches release.
+The KEEPER is the project's maintainer role. Where BUILDERs work from a planned backlog and SCRIBEs work from the state of design artifacts, KEEPERs work from the state of the codebase itself — its quality, its coverage, and its alignment with established standards.
 
-The KEEPER is the third role in the waterfall. A BUILDER that has exhausted available work transitions to KEEPER.
+The KEEPER is triggered by SCRIBE exhaustion (see Role Assignment and Waterfall above) or explicit user direction.
 
-The KEEPER's focus is **external-facing inputs**: customer-reported problems, filed issues, and any input that originates from outside the development team after a release. Where BUILDERs work from a planned backlog and SCRIBEs work from the state of design artifacts, KEEPERs work from the state of the live product as experienced by users.
+### Duties
 
-**Known constraints:**
-- KEEPERs do not have a PR limit. Customer issue resolution takes priority over concurrency management.
-- KEEPER work is reactive, not planned — it is driven by incoming issues, not the prototype backlog.
-- KEEPER branches and fix processes will be defined when post-release workflow is specified.
+**PR review:**
+- Review all open PRs targeting `prototype/active`, including any PRs previously opened by this agent. Treat own code with the same critical, impersonal scrutiny as external code — familiarity with the implementation is not a reason to approve uncritically.
+- Use the checklist in [`standards/pr.md`](../standards/pr.md). Leave specific, actionable comments on blocking issues. Do not approve PRs with unresolved standards violations.
+
+**Merge conflict cleanup:**
+- Inspect all open work-item branches for merge conflicts with `prototype/active`. Coordinate with the branch owner if one exists; if no owner is active, resolve the conflict by committing an updated branch head and pushing. The goal is a conflict-free integration surface for in-flight PRs.
+
+**Testing plan development:**
+- Review the current test suite across the codebase. Identify gaps: untested paths, uncovered edge cases, systems that rely solely on integration tests when unit tests would be more specific, and systems with no coverage at all.
+- Document findings as a comprehensive testing plan. Deliver as an `[Idea]` entry in `design/PROTOTYPE_FINDINGS.md` — not implemented directly. The SCRIBE and user adjudicate and convert to backlog items.
+
+**Standards compliance review:**
+- Review the production codebase for violations of the coding standards in `standards/`. Check `standards/general.md` and any language-specific file (e.g., `standards/java.md`).
+- When a violation is found: open a `prototype/fix/{short-description}` branch, implement the fix, and submit a PR targeting `prototype/active`. The PR description must identify the specific standard violated and the change made.
+- `prototype/fix/` branches follow the same PR rules as work-item branches: create PR on GitHub, get approved, merge, delete.
+
+**Architecture review:**
+- Review the codebase architecture against the current design document and Goals. Look for structural patterns that could create problems at scale, areas where coupling is higher than the design intends, and components that have grown beyond their documented scope.
+- Log all architectural concerns in `design/PROTOTYPE_FINDINGS.md` using the Technical Concerns `[TC-N]` format. Assess urgency as **[Pressing]** or **[Future]** per the existing convention.
+- Do not refactor architecture unilaterally. Log the concern; let the SCRIBE and user decide whether it becomes a backlog item.
+
+**Standards improvement:**
+- Look for patterns in the codebase that would benefit from a new or updated coding standard — conventions that have emerged organically and should be codified, or anti-patterns that are likely to recur.
+- Surface these as `[Idea]` entries in `design/PROTOTYPE_FINDINGS.md`. The SCRIBE adjudicates which become formal additions to the `standards/` files.
+
+### Branch and Commit Rules
+
+- All KEEPER code changes travel through a PR. Only the SCRIBE role may commit directly to `prototype/active`. KEEPER commits never bypass the PR process.
+- Fix branches use the naming convention `prototype/fix/{short-description}`. Example: `prototype/fix/jsonignore-computed-methods`. Delete after merge.
+- Fix PRs do not require a `BL-N` entry. The PR itself is the record. If a fix reveals a deeper systemic issue, log a `CODE-DRIFT` or new `BL-N` entry in `BACKLOG.md` as part of the fix PR.
+
+### Exhaustion and Transition
+
+When the KEEPER has: reviewed all open PRs, resolved all actionable merge conflicts, documented a testing plan, completed a standards compliance sweep, completed an architecture review, and surfaced all standards improvement ideas — the KEEPER transitions back to **BUILDER**. Re-orient to `design/BACKLOG.md`; new backlog items may have been added as a result of KEEPER findings.
+
+A KEEPER does not wait passively. Once defined duties are exhausted, the transition to BUILDER is immediate.
 
 **Any role** — including KEEPER — may identify and log DRIFT items if they encounter goal inconsistencies while working.
 

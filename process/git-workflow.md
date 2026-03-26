@@ -15,6 +15,7 @@ There are two long-lived branches. Everything else is short-lived and deleted af
 | `prototype/{random-noun}` | A parallel prototype branch, created only when a second prototype direction needs to run concurrently alongside `prototype/active`. Example: `prototype/thornwood`. Rare — most work stays in `prototype/active`. |
 | `prototype/work-item/{id}` | Short-lived work-item branch. Each backlog item is implemented here and delivered to `prototype/active` via a pull request — never by direct commit. Branched from the current head of `prototype/active`. Example: `prototype/work-item/BL-3`. Delete after merge. |
 | `prototype/scribe/{topic}` | Short-lived SCRIBE branch. Used when the SCRIBE has a directional proposal that requires user approval: new iteration start, RC eligibility change, DRIFT resolution, goals update, design doc update, or idea disposition. Branched from the current head of `prototype/active`. Example: `prototype/scribe/iteration-2-start`. Delete after merge. |
+| `prototype/fix/{short-description}` | Short-lived KEEPER fix branch. Used when the KEEPER identifies a standards violation or codebase issue during a compliance sweep. Branched from the current head of `prototype/active`. Example: `prototype/fix/jsonignore-computed-methods`. Delete after merge. |
 | `feature/{short-description}` | Isolated feature work not tied to a specific backlog item, branched off `prototype/active`. Use sparingly — prefer backlog items for all tracked work. Example: `feature/concept-decay`. |
 | `fix/{short-description}` | Bug fixes not already captured in a backlog item. |
 | `chore/{short-description}` | Non-functional changes — dependency updates, refactoring, doc cleanup. |
@@ -125,10 +126,10 @@ When the item is fully implemented and all tests pass:
 **6. After submitting the PR, review any open PRs while waiting.**  
 If there are other open PRs targeting `prototype/active`, review them now using the checklist in [`standards/pr.md`](../standards/pr.md). Leave comments, flag issues, or approve.
 
-**7. Continue to the next item if capacity allows.**  
-If there are no PRs to review, and the agent has fewer than **two active open PRs**, continue to the next highest unassigned item and repeat from step 3.
+**7. Continue to the next item.**  
+If there are no PRs to review, continue to the next highest unassigned item and repeat from step 3.
 
-If the agent has **two active open PRs** and no PRs to review: **pause**. Do not pick up additional work until one of the open PRs is merged or requires response.
+If there are no remaining unassigned, unblocked items, the BUILDER's backlog is exhausted. Transition to SCRIBE per the role waterfall in [`process/roles.md`](roles.md).
 
 **8. Respond to PR feedback.**  
 When a reviewer comments on an open PR:
@@ -141,7 +142,7 @@ When a reviewer comments on an open PR:
 After a PR is merged:
 - Delete the remote work-item branch: `git push origin --delete prototype/work-item/{BL-N}`.
 - Delete the local branch: `git branch -d prototype/work-item/{BL-N}`.
-- Return to step 1: review open PRs, then pick up the next item. Do not pause or wait for direction — continue the loop unless the 2-PR hold condition applies.
+- Return to step 1: review open PRs, then pick up the next item. Do not pause or wait for direction — continue the loop.
 
 ---
 
