@@ -9,6 +9,26 @@ Exact command sequences for every branch lifecycle operation. Copy and substitut
 
 ---
 
+## Resolving `{owner}/{repo}`
+
+Every `gh pr create` command requires `--repo {owner}/{repo}`. Always derive it from the actual remote rather than guessing:
+
+```bash
+# Canonical approach — works for HTTPS and SSH remotes
+gh repo view --json nameWithOwner -q .nameWithOwner
+# Output: zcross00/Sovereign  ← use this value for --repo
+```
+
+If `gh` reports it is not authenticated, run `gh auth login` and complete the browser flow before creating any PRs.
+
+```bash
+# Confirm gh is authenticated before proceeding
+gh auth status
+# Should show: Logged in to github.com as {username}
+```
+
+---
+
 ## Claiming a Work Item (BUILDER)
 
 ```bash
@@ -171,6 +191,37 @@ git push origin rc/v{N.M}
 git tag -a v{major}.{minor}.{patch} -m "Release {version}: {changelog summary}"
 git push origin v{major}.{minor}.{patch}
 ```
+
+---
+
+## Diagnosing PR Creation Failures
+
+If `gh pr create` completes without error but the PR is not visible on GitHub, or if the command fails:
+
+```bash
+# Step 1: Confirm the branch is on the remote
+git branch -r | grep {branch-name}
+# If not listed, the push did not complete:
+git push -u origin {branch-name}
+
+# Step 2: Check for an existing PR (it may have been created already)
+gh pr list --state open
+gh pr list --state open --head {branch-name}
+
+# Step 3: Check gh authentication
+gh auth status
+
+# Step 4: Confirm the correct repo is targeted
+gh repo view --json nameWithOwner -q .nameWithOwner
+
+# Step 5: Open the PR in the browser to visually confirm
+gh pr view {branch-name} --web
+
+# Step 6: If no PR exists, create it now (re-run the gh pr create command
+# from the relevant section above, with the resolved --repo value)
+```
+
+A PR is only complete when `gh pr list --state open` shows it **and** it is visible at github.com. Pushing a branch alone is not sufficient.
 
 ---
 
