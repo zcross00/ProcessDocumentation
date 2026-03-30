@@ -91,8 +91,10 @@ Enforce these even when a project's existing code deviates.
 | Goals come from the user | `process/roles.md` |
 | Every backlog item traces to DESIGN.md | `process/roles.md` |
 | EXECUTOR implements exactly what the backlog item says | `process/roles.md` |
+| Technical debt is drift — log it in DRIFT.md and DESIGN.md Technical Debt section | `process/roles.md` |
 | All work goes through branches — branch, commit, merge, communicate | `process/git-workflow.md` |
-| No PRs required — direct merge after build passes | `process/git-workflow.md` |
+| Agents never merge to `main` — the user merges to main when ready | `process/git-workflow.md` |
+| No PRs required — direct merge into the active branch after build passes | `process/git-workflow.md` |
 | Roles are permanent per session | `process/roles.md` |
 | Counter-goal implementations are logged in DRIFT.md | `process/roles.md` |
 | No duplicate DRIFT entries — add new instances to existing items | `process/roles.md` |
@@ -114,6 +116,7 @@ Skills are pre-packaged, task-specific instruction files that live in `.github/s
 | `executor-loop` | EXECUTOR picking up and implementing the next backlog item |
 | `test-writing` | Writing new JUnit 5 tests (Java projects) |
 | `domain-model` | Choosing JavaBean vs. record vs. enum (Java projects) |
+| `refinement` | PLANNER analyzing design/features/backlog to identify and plan needed work |
 | `standards-check-java` | Pre-commit standards compliance check (Java projects) |
 
 Skill files are located at `.github/skills/{skill-name}/SKILL.md` within the project repo.

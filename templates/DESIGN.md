@@ -69,6 +69,24 @@ Each system section describes a coherent area of functionality needed to realize
 
 ---
 
+<!-- section: technical-debt -->
+## Technical Debt
+
+Identified technical debt that actively obstructs progress toward the project's goals. Every item here must have a corresponding `DR-N` entry in DRIFT.md — technical debt is drift.
+
+| ID | Description | Affected Goals | Urgency | Impact | DRIFT Ref | BACKLOG Ref |
+|----|-------------|----------------|---------|--------|-----------|-------------|
+| TD-1 | {{Short description of the debt}} | G-{{N}} | {{Low \| Medium \| High}} | {{How this debt obstructs the goal}} | DR-{{N}} | BL-{{N}} or Pending |
+
+**Urgency guide:**
+- **High** — Blocks near-term work or compounds daily.
+- **Medium** — Slows progress noticeably; should be scheduled.
+- **Low** — Manageable for now; address when convenient.
+
+**Impact guide:** Describe the concrete effect on the linked goal(s) — not the code smell itself, but what the debt *prevents or degrades* in terms of goal progress.
+
+---
+
 <!-- section: decisions -->
 ## Design Decisions
 

@@ -11,8 +11,11 @@ An implementation qualifies as drift when it:
 - **Harms** a goal's chance of success
 - **Contradicts** what a goal intends
 - **Does not further** any goal while consuming project resources or adding complexity
+- **Constitutes technical debt** that actively obstructs progress toward a goal
 
 Drift is not a bug list. Bugs are defects in intended behavior. Drift is correct behavior that moves the project in the wrong direction relative to its goals.
+
+**Technical debt is drift.** Any identified technical debt is an active obstacle to the user's goals — it slows progress, increases risk, or constrains design options. Every piece of identified technical debt must have a corresponding DRIFT entry linking it to the goal(s) it obstructs. The DRIFT entry establishes the record; the DESIGN.md Technical Debt section captures urgency and impact; a BACKLOG item plans the resolution.
 
 ---
 

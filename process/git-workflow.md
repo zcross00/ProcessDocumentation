@@ -10,7 +10,7 @@ There is one long-lived branch per active development effort. Everything else is
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Always stable. Represents the last shipped release. Updated only when a completed effort is ready for users. |
+| `main` | Always stable. Represents the last shipped release. **Only the user merges to `main`** — agents never merge to or push to `main` directly. |
 | Active branch | The current development branch (e.g., `prototype/active`, `develop`, or whatever the project uses). All work targets this branch. |
 | `work/{BL-N}` | Short-lived work branch. Each backlog item is implemented here and merged directly into the active branch. Branched from the current head of the active branch. Delete after merge. |
 
@@ -26,7 +26,7 @@ main                          ← stable; tagged on release
 
 - Work branches are short-lived. Delete after merge.
 - Design documents live in the `design/` folder on the active branch.
-- `main` is only updated when work is ready for users.
+- `main` is only updated when the user decides work is ready. **Agents never merge to `main` directly** — the user is responsible for promoting work from the active branch to `main`.
 - **No PRs required.** Work branches merge directly into the active branch after build passes. The merge commit is the record.
 
 ---

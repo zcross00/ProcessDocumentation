@@ -12,7 +12,7 @@ These apply to every role:
 
 **Read access is unrestricted.** No role is barred from inspecting any part of the repository. A PLANNER reading production code to assess design adherence is expected. An EXECUTOR reading design documents to verify consistency with their implementation is expected. Roles define *what you produce*, not *what you read*.
 
-**All work goes through branches.** Both roles branch off the currently active branch, make their changes, commit, merge back into the active branch, and clearly communicate to the user when they do so. No PRs are required — direct merge after build passes.
+**All work goes through branches.** Both roles branch off the currently active development branch, make their changes, commit, merge back into the active branch, and clearly communicate to the user when they do so. **Agents never merge to `main`** — the user is responsible for merging the active branch to `main` when they decide work is ready. No PRs are required — direct merge into the active branch after build passes.
 
 **Goals are the north star.** Every agent should strive towards furthering progress on the user's goals. Goals live in `design/GOALS.md` and come from the user.
 
@@ -49,8 +49,28 @@ The PLANNER breaks down the design into implementable items and adds them to the
 - Harms a goal's chance of success
 - Is the opposite of what a goal intends
 - Does not further any goal
+- Constitutes technical debt that obstructs goal progress
 
 ...it must be logged in DRIFT.md. Do not log duplicate entries. If additional instances of the same drift are found, add them to the existing item.
+
+**Technical debt is drift.** Any identified technical debt is an active obstacle to the user's goals. When the PLANNER identifies technical debt:
+1. Log a `DR-N` entry in DRIFT.md linking the debt to the goal(s) it obstructs.
+2. Add a corresponding entry to the Technical Debt section of DESIGN.md with urgency, impact, and the `DR-N` reference.
+3. During Refinement, evaluate whether the debt warrants a backlog item based on its urgency and impact on stated goals.
+
+### Refinement
+
+Refinement is the process of analyzing the design, feature list, and current backlog to identify and plan needed work. The PLANNER performs Refinement when directed by the user.
+
+During Refinement, the PLANNER:
+1. Reads DESIGN.md, FEATURES.md, BACKLOG.md, and DRIFT.md.
+2. Identifies gaps: systems or behaviors described in the design that are not yet reflected in either FEATURES.md (implemented) or BACKLOG.md (planned).
+3. Reviews active technical debt (DESIGN.md Technical Debt section) and evaluates whether any items warrant backlog entries based on urgency and impact.
+4. Reviews active drift items in DRIFT.md and ensures resolution backlog items exist for anything Medium or High severity.
+5. Creates new backlog items using the **backlog-entry** skill for each identified gap or needed resolution.
+6. The number of backlog items to produce is specified by the user as an argument. If no count is specified, the default is **10**.
+
+Refinement does not duplicate existing work — skip anything already present in the backlog or confirmed in the feature list.
 
 ### Reviewing Completed Work
 
