@@ -11,15 +11,21 @@ Both human developers and AI coding agents should consult this repository before
 | Directory | Purpose |
 |-----------|---------|
 | [`standards/`](standards/) | Coding conventions and language-specific rules |
-| [`process/`](process/) | Workflow processes: design iteration, prototyping, git |
-| [`templates/`](templates/) | Reusable document templates for new projects and phases |
+| [`process/`](process/) | Workflow processes: roles, git workflow |
+| [`templates/`](templates/) | Reusable document templates for projects |
 | [`style/`](style/) | Writing and formatting rules for all documentation |
 
 ---
 
 ## For AI Coding Agents
 
-See [`AGENTS.md`](AGENTS.md) — this file is written specifically for AI assistants and explains how to apply these standards when working on any project in this development environment.
+See [`AGENTS.md`](AGENTS.md) — this file is written specifically for AI assistants and explains how to apply these standards when working on any project.
+
+---
+
+## Roles
+
+There are two roles: **PLANNER** and **EXECUTOR**. See [`process/roles.md`](process/roles.md) for definitions.
 
 ---
 
@@ -36,35 +42,19 @@ See [`AGENTS.md`](AGENTS.md) — this file is written specifically for AI assist
 
 | File | Covers |
 |------|--------|
-| [`process/design-iteration.md`](process/design-iteration.md) | The full design → prototype → findings → iteration cycle |
+| [`process/roles.md`](process/roles.md) | PLANNER and EXECUTOR role definitions and workflows |
 | [`process/git-workflow.md`](process/git-workflow.md) | Branch naming, commit messages, merge strategy |
 
 ---
 
 ## Templates
 
-All templates live in [`templates/`](templates/). Filenames match the document type they represent. When starting a new project or phase, copy the relevant template and fill in the placeholders.
+All templates live in [`templates/`](templates/). When starting a new project or adding a design artifact, copy the relevant template and fill in the placeholders.
 
 | Template | Use For |
-|----------|---------|| [`templates/GOALS.md`](templates/GOALS.md) | Project goals — high-level value statements, versioned || [`templates/PROJECT_README.md`](templates/PROJECT_README.md) | Project-level README |
-| [`templates/DESIGN_DOCUMENT.md`](templates/DESIGN_DOCUMENT.md) | Design / concept document (GDD, product spec, etc.) |
-| [`templates/ROADMAP.md`](templates/ROADMAP.md) | Milestone-based implementation roadmap |
-| [`templates/PROTOTYPE_FINDINGS.md`](templates/PROTOTYPE_FINDINGS.md) | Prototype observation and findings log |
-
----
-
-## Style Guide
-
-| File | Covers |
-|------|--------|
-| [`style/documentation.md`](style/documentation.md) | Tone, heading hierarchy, table rules, sentence style for all markdown documents |
-
----
-
-## Maintenance
-
-This repository evolves alongside the projects it serves. When a pattern works consistently or a new convention is established:
-
-1. Update the relevant standard or process document here first.
-2. Reference the change in the affected project's commit or PR message.
-3. Treat divergence from these standards in any project as technical debt to be noted and resolved.
+|----------|---------|
+| [`templates/GOALS.md`](templates/GOALS.md) | Project goals — user-defined value statements |
+| [`templates/DESIGN.md`](templates/DESIGN.md) | Comprehensive design breakdown — agent-optimized |
+| [`templates/FEATURES.md`](templates/FEATURES.md) | Catalog of implemented features linked to goals |
+| [`templates/BACKLOG.md`](templates/BACKLOG.md) | Work items derived from the design |
+| [`templates/DRIFT.md`](templates/DRIFT.md) | Counter-goal implementation log |
