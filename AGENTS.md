@@ -37,10 +37,11 @@ See [`process/roles.md`](process/roles.md) for full role definitions and workflo
 ### When writing or modifying code
 
 1. Read [`standards/general.md`](standards/general.md) — these rules apply regardless of language.
-2. Find the language-specific file in `standards/` and read it (e.g., [`standards/java.md`](standards/java.md) for Java work).
+2. Find the language-specific file in `standards/` and read it (e.g., [`standards/java.md`](standards/java.md) for Java, [`standards/csharp.md`](standards/csharp.md) for C#/Unity).
 3. Apply the naming, structure, and pattern rules before generating or modifying any code.
 4. If the standard is silent on something, use the existing project code style as local precedent.
 5. For Java projects: use the **`domain-model`** skill when adding a new class, enum, or record; use the **`standards-check-java`** skill for a pre-commit compliance check; use the **`test-writing`** skill when adding tests.
+6. For C#/Unity projects: use the **`domain-model`** skill when choosing between MonoBehaviour, ScriptableObject, data class, record, or enum; use the **`standards-check-csharp`** skill for a pre-commit compliance check; use the **`test-writing`** skill when adding tests.
 
 ### When starting a new project
 
@@ -87,6 +88,9 @@ Enforce these even when a project's existing code deviates.
 | Java: `@JsonIgnore` on computed methods | `standards/java.md` |
 | Java: records for value/data objects | `standards/java.md` |
 | Java: `Optional` only on return types | `standards/java.md` |
+| C#: Data/MonoBehaviour split for simulation state | `standards/csharp.md` |
+| C#: `[NonSerialized]` on computed/cached fields | `standards/csharp.md` |
+| C#: ScriptableObject for designer-tunable config | `standards/csharp.md` |
 | Doc headings follow template hierarchy | `style/documentation.md` |
 | Goals come from the user | `process/roles.md` |
 | Every backlog item traces to DESIGN.md | `process/roles.md` |
@@ -114,10 +118,11 @@ Skills are pre-packaged, task-specific instruction files that live in `.github/s
 | `drift-entry` | Logging a counter-goal implementation |
 | `planner-review` | PLANNER reviewing a completed backlog item |
 | `executor-loop` | EXECUTOR picking up and implementing the next backlog item |
-| `test-writing` | Writing new JUnit 5 tests (Java projects) |
-| `domain-model` | Choosing JavaBean vs. record vs. enum (Java projects) |
+| `test-writing` | Writing tests (JUnit 5 for Java, NUnit for C#/Unity) |
+| `domain-model` | Choosing the correct type construct for a new domain type |
 | `refinement` | PLANNER analyzing design/features/backlog to identify and plan needed work |
 | `standards-check-java` | Pre-commit standards compliance check (Java projects) |
+| `standards-check-csharp` | Pre-commit standards compliance check (C#/Unity projects) |
 
 Skill files are located at `.github/skills/{skill-name}/SKILL.md` within the project repo.
 
